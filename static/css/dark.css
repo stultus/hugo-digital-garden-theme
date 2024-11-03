@@ -1,16 +1,19 @@
-html {
+/* Remove inversion filters */
+html, body {
     background-color: #171717 !important;
+    color: var(--dark);
 }
-html {
-    filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(85%);
-    -webkit-filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(85%);
+
+/* Override CSS variables for dark theme */
+body.dark-theme {
+    /* Variables already defined in style.css */
 }
-body {
-    background-color: #FFF !important;
+
+/* Adjust elements as needed */
+a {
+    color: var(--blue);
 }
-img,
-video,
-body * [style*="background-image"] {
-    filter: hue-rotate(180deg) contrast(100%) invert(100%);
-    -webkit-filter: hue-rotate(180deg) contrast(100%) invert(100%);
+
+img, video, body * [style*="background-image"] {
+    filter: none; /* Ensure media displays correctly */
 }

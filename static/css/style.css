@@ -1,151 +1,292 @@
+/* Updated style.css */
+
+/* Import Typewriter Font */
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+
+/* CSS Variables */
 :root {
+    /* Light Theme Colors */
     --blue: #0A94C8;
     --lighter-blue: #addbec;
     --yellow: #FFB603;
     --red: #FF2F03;
     --dark: #233044;
     --grey: #454963;
-    --white: #fff;
+    --white: #ffffff;
     --offwhite: #fafafa;
+
+    /* Fonts */
     --title: 'Mulish', sans-serif;
     --summary: 'Frank Ruhl Libre', serif;
     --headings: 'Encode Sans Semi Condensed', sans-serif;
     --h5: 0.83rem;
     --h6: 0.67rem;
+
+    /* Particle Colors */
+    --particle-color: #000000; /* Black particles on light background */
+    --line-color: #000000;
+
+    /* Theme Toggle Icon Colors */
+    --toggle-icon-color: var(--grey);
+    --toggle-icon-hover-color: var(--blue);
+
+    /* Syntax Highlighting Variables */
+    --code-bg-color: #f5f5f5;
+    --code-text-color: #333333;
+    --code-border-color: #e0e0e0;
+    --code-keyword-color: #d73a49;
+    --code-string-color: #032f62;
+    --code-function-color: #6f42c1;
+    --code-comment-color: #6a737d;
+
+    /* Blockquote Variables */
+    --blockquote-bg: #f9f9f9;
+    --blockquote-border: #cccccc;
+    --blockquote-text: #555555;
+
+    /* Diary Theme Variables */
+    --diary-font: 'Courier Prime', monospace;
+    --diary-bg-color: #fafafa;
+    --diary-text-color: #333333;
+    --diary-date-color: #666666;
+    --diary-tag-bg: #e0e0e0;
+    --diary-tag-color: #333333;
+    --diary-quote-border: #cccccc;
+    --diary-quote-bg: #f9f9f9;
+    --diary-quote-text: #555555;
+    --diary-code-bg: #f5f5f5;
+    --diary-code-text: #333333;
+    --diary-code-border: #e0e0e0;
+    --diary-line-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme {
+    /* Dark Theme Colors */
+    --blue: #0A94C8;
+    --lighter-blue: #addbec;
+    --yellow: #FFB603;
+    --red: #FF2F03;
+    --dark: #ffffff;
+    --grey: #cccccc;
+    --white: #171717;
+    --offwhite: #1e1e1e;
+
+    /* Particle Colors */
+    --particle-color: #ffffff; /* White particles on dark background */
+    --line-color: #ffffff;
+
+    /* Theme Toggle Icon Colors */
+    --toggle-icon-color: #ffffff; /* White icon in dark mode */
+    --toggle-icon-hover-color: var(--lighter-blue);
+
+    /* Syntax Highlighting Variables */
+    --code-bg-color: #1e1e1e;
+    --code-text-color: #cccccc;
+    --code-border-color: #3e3e3e;
+    --code-keyword-color: #c586c0;
+    --code-string-color: #ce9178;
+    --code-function-color: #dcdcaa;
+    --code-comment-color: #6a9955;
+
+    /* Blockquote Variables */
+    --blockquote-bg: #2e2e2e;
+    --blockquote-border: #555555;
+    --blockquote-text: #cccccc;
+
+    /* Diary Theme Variables */
+    --diary-bg-color: #1e1e1e;
+    --diary-text-color: #cccccc;
+    --diary-date-color: #999999;
+    --diary-tag-bg: #333333;
+    --diary-tag-color: #cccccc;
+    --diary-quote-border: #555555;
+    --diary-quote-bg: #2e2e2e;
+    --diary-quote-text: #cccccc;
+    --diary-code-bg: #2e2e2e;
+    --diary-code-text: #cccccc;
+    --diary-code-border: #555555;
+    --diary-line-color: rgba(255, 255, 255, 0.05);
 }
 
 /********************* General *********************/
 
 body {
-  font-family: var(--summary);
-  font-weight: 300;
-  color: var(--dark);
-  background-color: var(--white);
+    font-family: var(--summary);
+    font-weight: 300;
+    color: var(--dark);
+    background-color: var(--white);
 }
 
 #content {
-  position: relative;
-  min-height: 95vh;
+    position: relative;
+    min-height: 95vh;
 }
 
 a {
-  text-decoration: underline var(--grey);
-  color: var(--dark);
+    text-decoration: underline var(--grey);
+    color: var(--dark);
 }
 
 strong {
-  font-weight:600;
+    font-weight: 600;
 }
 
 table {
-  font-family: var(--summary);
+    font-family: var(--summary);
 }
 thead {
-  background-color:whitesmoke;
-  border-bottom-color: var(--dark);
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+    background-color: whitesmoke;
+    border-bottom-color: var(--dark);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
 }
-table th , table td{
-  padding-right: 40px;
-  padding-left: 10px;
+table th, table td {
+    padding-right: 40px;
+    padding-left: 10px;
 }
-table th{
-  font-size:large;
+table th {
+    font-size: large;
 }
-table td{
-  font-size: medium;
+table td {
+    font-size: medium;
 }
 
 .serif {
-  font-family: var(--summary);
-  color: var(--grey);
+    font-family: var(--summary);
+    color: var(--grey);
 }
 
-.card{
-  border-radius: 4px;
-  background: var(--offwhite);
-  box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
-  transition: 1s transform cubic-bezier(.155,1.105,.295,1.12),1s box-shadow,1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
-/* padding: 14px 80px 18px 36px; */
-  cursor: pointer;
-  font-family: var(--headings);
+.card {
+    border-radius: 4px;
+    background: var(--offwhite);
+    box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+    transition: 1s transform cubic-bezier(.155,1.105,.295,1.12), 1s box-shadow, 1s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+    cursor: pointer;
+    font-family: var(--headings);
 }
 .card-title {
-  font-weight: 600;
-  font-family: var(--title);
+    font-weight: 600;
+    font-family: var(--title);
 }
 .card-footer {
-  background-color: var(--white);
+    background-color: var(--white);
 }
-.card:hover{
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
 }
-.top-highlight:hover { 
-  border-top-color: var(--blue);
-  border-top-width: 2px;
+.top-highlight:hover {
+    border-top-color: var(--blue);
+    border-top-width: 2px;
 }
-.card h3{
-  font-weight: 600;
+.card h3 {
+    font-weight: 600;
 }
 .card-right {
-  text-align: right;
+    text-align: right;
 }
 .card-date {
-  font-weight: lighter;
-  color: var(--grey);
-  font-size: x-small;
+    font-weight: lighter;
+    color: var(--grey);
+    font-size: x-small;
 }
 
-@media(max-width: 990px){
-  .card{
-    margin: 20px;
-  }
-} 
+@media (max-width: 990px) {
+    .card {
+        margin: 20px;
+    }
+}
 
 blockquote {
-  font-family: var(--summary);
-  padding: 10px 10px 1px 30px;
-  background-color:ghostwhite;
-  border-left-width: 5px;
-  border-left-color: lightgray;
-  border-left-style: solid;
+    background-color: var(--blockquote-bg);
+    border-left: 5px solid var(--blockquote-border);
+    color: var(--blockquote-text);
+    padding: 1em 1.5em;
+    margin: 0 0 1em;
+    border-radius: 4px;
 }
+
+blockquote p {
+    margin: 0;
+}
+
+blockquote::before {
+    content: "“";
+    font-size: 2em;
+    line-height: 0.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.4em;
+    color: var(--blockquote-border);
+}
+
 code {
-  color: var(--grey);
-  font-size: smaller;
+    background-color: var(--code-bg-color);
+    color: var(--code-text-color);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95em;
 }
+
+pre {
+    background-color: var(--code-bg-color);
+    color: var(--code-text-color);
+    padding: 1em;
+    overflow-x: auto;
+    border: 1px solid var(--code-border-color);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95em;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border: none;
+}
+
 .btn-link {
-  text-decoration: none;
-  border-bottom-width: 1px;
-  border-radius: 0px;
-  color: var(--blue);
-  vertical-align: middle;
+    text-decoration: none;
+    border-bottom-width: 1px;
+    border-radius: 0px;
+    color: var(--blue);
+    vertical-align: middle;
 }
 .btn-link i {
-  padding-right: 5px;
+    padding-right: 5px;
 }
 .btn-link:hover {
-  text-decoration: underline;
-  transition: 0.6s;
-  transform: translate(0, 5px);
-  color: var(--blue);
+    text-decoration: underline;
+    transition: 0.6s;
+    transform: translate(0, 5px);
+    color: var(--blue);
 }
 .status {
-  font-weight: lighter;
+  font-weight: bold;
   color: green;
-  font-size: small;
+  font-size: medium; /* You can also use 'large', 'x-large', or specify an exact size like '1.2rem' or '18px' */
 }
 
 
 /********************* Navbar *********************/
 
 .navbar {
-  background: var(--white) !important;
-  color: var(--dark);
-  font-family: var(--title);
+    background: var(--white) !important;
+    color: var(--dark);
+    font-family: var(--title);
 }
+
+.navbar-brand {
+    color: var(--dark);
+    font-family: var(--title);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    color: var(--blue);
+}
+
 .navbar-nav .nav-item .nav-link {
     color: var(--grey);
     font-weight: 300;
@@ -156,37 +297,37 @@ code {
     margin-right: 1em;
     padding: 0.2em 0;
 }
-/* Fade in */
+
+/* Fade in effect for nav links */
 .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 0.1em;
-  background-color: var(--red);
-  opacity: 0;
-  transition: opacity 300ms, transform 300ms;
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.1em;
+    background-color: var(--red);
+    opacity: 0;
+    transition: opacity 300ms, transform 300ms;
 }
+
 .nav-link:hover::after,
 .nav-link:focus::after {
-  opacity: 1;
-  transform: translate3d(0, 0.2em, 0);
+    opacity: 1;
+    transform: translate3d(0, 0.2em, 0);
 }
-
-
 
 /********************* Home *********************/
 
 .name {
-  font-family: var(--title);
-  font-weight: 800;
+    font-family: var(--title);
+    font-weight: 800;
 }
 
 .bio {
-  max-width: 750px;
-  font-weight: 200;
-  font-family: var(--summary);
+    max-width: 750px;
+    font-weight: 200;
+    font-family: var(--summary);
 }
 .heading {
     font-weight: 400;
@@ -195,201 +336,496 @@ code {
     text-decoration: none;
 }
 .heading:hover {
-  transition: 0.6s;
-  color: var(--blue);
-  cursor: pointer;
+    transition: 0.6s;
+    color: var(--blue);
+    cursor: pointer;
 }
 .subheading {
-  color: var(--grey);
-  font-size: 22px;
-  padding-bottom: 10px;
+    color: var(--grey);
+    font-size: 22px;
+    padding-bottom: 10px;
 }
 .tag-badge {
-  background-color: var(--blue);
-  font-family: var(--headings);
-  font-weight: 400;
+    background-color: var(--blue);
+    font-family: var(--headings);
+    font-weight: 400;
 }
 .see-all {
-  text-decoration: none;
-  border-bottom-width: 1px;
-  border-radius: 0px;
-  color: var(--blue);
-  border-bottom-color:gainsboro;
+    text-decoration: none;
+    border-bottom-width: 1px;
+    border-radius: 0px;
+    color: var(--blue);
+    border-bottom-color: gainsboro;
 }
 .see-all:hover {
-  transition: 0.6s;
-  transform: translate(0, 5px);
-  border-bottom-color: var(--blue);
-  color: var(--blue);
+    transition: 0.6s;
+    transform: translate(0, 5px);
+    border-bottom-color: var(--blue);
+    color: var(--blue);
 }
-
 
 /********************* List *********************/
 
 /* ---- button-filters ---- */
 .button {
-  font-weight: 200;
-  display: inline-block;
-  padding: 0.15em 0.5em;
-  background: var(--white);
-  border: 2px;
-  margin-bottom: 10px;
-  margin-right: 3px;
-  color:var(--grey);
-  cursor: pointer;
-  text-transform: capitalize;
-  font-size: small;
+    font-weight: 200;
+    display: inline-block;
+    padding: 0.15em 0.5em;
+    background: var(--white);
+    border: 2px;
+    margin-bottom: 10px;
+    margin-right: 3px;
+    color: var(--grey);
+    cursor: pointer;
+    text-transform: capitalize;
+    font-size: small;
 }
 .button:hover {
-  background-color:var(--lighter-blue);
-  color:var(--dark);
-  transition: 1s;
+    background-color: var(--lighter-blue);
+    color: var(--dark);
+    transition: 1s;
 }
 .button:active,
 .button.is-checked {
-  background-color: var(--lighter-blue);
-  color:var(--dark);
+    background-color: var(--lighter-blue);
+    color: var(--dark);
 }
-.btn-check:active+.button, 
-.btn-check:checked+.button, 
-.button.active, 
-.button.dropdown-toggle.show, 
+.btn-check:active + .button,
+.btn-check:checked + .button,
+.button.active,
+.button.dropdown-toggle.show,
 .button:active {
-  color: #fff;
-  background-color: var(--lighter-blue);
-  color: var(--dark);
+    color: #fff;
+    background-color: var(--lighter-blue);
+    color: var(--dark);
 }
 .button-group:after {
-  content: '';
-  display: block;
-  /* clear: both; */
+    content: '';
+    display: block;
 }
 .button-group .button {
-  float: left;
-  border-radius: 5px;
+    float: left;
+    border-radius: 5px;
 }
 
 /* ---- Title ---- */
 .display-2 {
-  font-family: var(--title);
-  font-weight: 700;
-  color: var(--dark);
+    font-family: var(--title);
+    font-weight: 700;
+    color: var(--dark);
 }
 
 /********************* Content *********************/
 
 .main-content {
-  line-height: 40px;
-  font-size: 22px;
+    line-height: 40px;
+    font-size: 22px;
 }
 a {
-  color: var(--blue);
-  text-decoration: underline 0.10em rgba(255, 255, 255, 0);
-  transition: text-decoration-color 0.5s;
+    color: var(--blue);
+    text-decoration: underline 0.10em rgba(255, 255, 255, 0);
+    transition: text-decoration-color 0.5s;
 }
 a:hover {
-  color: var(--blue);
-  text-decoration-color: var(--blue);
+    color: var(--blue);
+    text-decoration-color: var(--blue);
 }
 .main-content h2, h3, h4 {
-  font-family: var(--headings);
-  font-weight: bold;
-  color: var(--dark);
-  padding-top: 10px;
-  padding-bottom: 10px;
+    font-family: var(--headings);
+    font-weight: bold;
+    color: var(--dark);
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .highlight {
-  line-height: normal;
-  font-size: medium;
-  border-left-style: solid;
-  border-left-width: 5px;
-  padding-left: 10px;
-  border-color: var(--dark);
+    line-height: normal;
+    font-size: medium;
+    border-left-style: solid;
+    border-left-width: 5px;
+    padding-left: 10px;
+    border-color: var(--dark);
 }
 
 /********************* Footer *********************/
 
 .footer-social a,
-.footer-social i{
-  color: var(--dark);
-  font-size: x-large;
+.footer-social i {
+    color: var(--dark);
+    font-size: x-large;
 }
 
-.footer-social a,
-.footer-social i:hover{
-  color: var(--blue);
-  transition: color .5s;
+.footer-social a:hover,
+.footer-social i:hover {
+    color: var(--blue);
+    transition: color .5s;
 }
-
 
 /********************* Linked Header *********************/
 
 button.anchor {
-  fill: var(--blue);
-  background-color: inherit;
-  border: none;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: inherit;
-  padding: 0;
+    fill: var(--blue);
+    background-color: inherit;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: inherit;
+    padding: 0;
 }
 
 @media (hover: hover) {
-	button.anchor {
-	  opacity: 0.1;
-	}
-  h1:hover button.anchor,
-  h2:hover button.anchor,
-  h3:hover button.anchor,
-  h4:hover button.anchor,
-  h5:hover button.anchor,
-  h6:hover button.anchor {
-    opacity: 1;
-  }
+    button.anchor {
+        opacity: 0.1;
+    }
+    h1:hover button.anchor,
+    h2:hover button.anchor,
+    h3:hover button.anchor,
+    h4:hover button.anchor,
+    h5:hover button.anchor,
+    h6:hover button.anchor {
+        opacity: 1;
+    }
 }
 
 @media (hover: none) {
-	button.anchor {
-	  opacity: 1;
-	}
+    button.anchor {
+        opacity: 1;
+    }
 }
 
 @media (hover: hover) {
-  [data-title] {
-  position: relative;
-  }
+    [data-title] {
+        position: relative;
+    }
 
-  [data-title]:after {
-  font-size: var(--h6);
-  content: attr(data-title);
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  color: var(--white);
-  background-color: var(--dark);
-  width: max-content;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  padding: 0.4rem 0.5rem;
-  border-radius: 5px;
-  }
+    [data-title]:after {
+        font-size: var(--h6);
+        content: attr(data-title);
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        color: var(--white);
+        background-color: var(--dark);
+        width: max-content;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        padding: 0.4rem 0.5rem;
+        border-radius: 5px;
+    }
 
-  [data-title]:hover:after {
-  opacity: 1;
-  }
+    [data-title]:hover:after {
+        opacity: 1;
+    }
 }
 
 .link-copied {
-  font-size: var(--h5);
-  position: fixed;
-  left: 1rem;
-  bottom: 1rem;
-  margin: 1rem;
-  color: var(--white);
-  background-color: var(--dark);
-  width: max-content;
-  padding: 0.4rem 0.7rem;
-  border-radius: 5px;
-  z-index: 1;
+    font-size: var(--h5);
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    margin: 1rem;
+    color: var(--white);
+    background-color: var(--dark);
+    width: max-content;
+    padding: 0.4rem 0.7rem;
+    border-radius: 5px;
+    z-index: 1;
 }
+
+/********************* Particles.js Container *********************/
+
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Ensure it stays behind your content */
+    top: 0;
+    left: 0;
+}
+
+/********************* Theme Toggle Button *********************/
+
+#dark-mode-toggle {
+    background: none;
+    border: none;
+    color: var(--toggle-icon-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#dark-mode-toggle:hover {
+    color: var(--toggle-icon-hover-color);
+}
+
+/* Adjust the icon size and alignment */
+.navbar .nav-item #dark-mode-toggle i {
+    font-size: 1.5rem;
+}
+
+/* Ensure the icon is visible in dark mode */
+body.dark-theme #dark-mode-toggle {
+    color: var(--toggle-icon-color);
+}
+
+body.dark-theme #dark-mode-toggle:hover {
+    color: var(--toggle-icon-hover-color);
+}
+
+/********************* Syntax Highlighting Styles *********************/
+
+.highlight {
+    background-color: var(--code-bg-color);
+    color: var(--code-text-color);
+    border: 1px solid var(--code-border-color);
+    padding: 1em;
+    overflow-x: auto;
+    font-family: monospace;
+    font-size: 0.95em;
+    border-radius: 4px;
+}
+
+/* Syntax highlighting for different token types */
+.highlight .ch,
+.highlight .cm,
+.highlight .c1,
+.highlight .cs {
+    color: var(--code-comment-color);
+}
+
+.highlight .k,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kt {
+    color: var(--code-keyword-color);
+}
+
+.highlight .s,
+.highlight .s1,
+.highlight .s2,
+.highlight .se {
+    color: var(--code-string-color);
+}
+
+.highlight .nf,
+.highlight .fm {
+    color: var(--code-function-color);
+}
+
+/* Numbers */
+.highlight .m,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo {
+    color: #36acaa;
+}
+
+/* Variables */
+.highlight .na,
+.highlight .nb,
+.highlight .nc,
+.highlight .no,
+.highlight .nd,
+.highlight .ni,
+.highlight .ne,
+.highlight .nl,
+.highlight .nn,
+.highlight .nx,
+.highlight .py,
+.highlight .nt,
+.highlight .nv,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi {
+    color: var(--code-text-color);
+}
+
+/* Operators */
+.highlight .o,
+.highlight .ow {
+    color: var(--code-keyword-color);
+}
+
+/* Punctuation */
+.highlight .p {
+    color: var(--code-text-color);
+}
+
+/* Generics */
+.highlight .gd {
+    color: #e3116c;
+}
+.highlight .ge {
+    font-style: italic;
+}
+.highlight .gr {
+    color: red;
+}
+.highlight .gh {
+    color: #795da3;
+}
+.highlight .gi {
+    color: #2f9c0a;
+}
+.highlight .go {
+    color: #888888;
+}
+.highlight .gp {
+    color: #555555;
+}
+.highlight .gs {
+    font-weight: bold;
+}
+.highlight .gu {
+    color: #800080;
+}
+.highlight .gt {
+    color: #0044dd;
+}
+
+/********************* Diary Page Styles *********************/
+
+.diary-page {
+    background-color: var(--diary-bg-color);
+    padding: 2em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    /* Add lined paper effect */
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 1.8em,
+        var(--diary-line-color) 1.8em,
+        var(--diary-line-color) 2em
+    );
+}
+
+.diary-page .main-content {
+    font-family: var(--diary-font);
+    font-size: 1em;
+    line-height: 1.8em;
+    color: var(--diary-text-color);
+}
+
+.diary-page h1 {
+    font-family: var(--diary-font);
+    font-size: 2em;
+    margin-bottom: 0.5em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.diary-page .card-date {
+    font-family: var(--diary-font);
+    font-size: 0.9em;
+    color: var(--diary-date-color);
+    text-align: center;
+}
+
+.diary-page .tag-badge {
+    background-color: var(--diary-tag-bg);
+    color: var(--diary-tag-color);
+}
+
+.diary-page blockquote {
+    border-left: 5px solid var(--diary-quote-border);
+    background-color: var(--diary-quote-bg);
+    color: var(--diary-quote-text);
+}
+
+.diary-page code {
+    background-color: var(--diary-code-bg);
+    color: var(--diary-code-text);
+}
+
+.diary-page pre {
+    background-color: var(--diary-code-bg);
+    color: var(--diary-code-text);
+    border: 1px solid var(--diary-code-border);
+}
+
+.diary-page .highlight {
+    background-color: var(--diary-code-bg);
+    color: var(--diary-code-text);
+    border: 1px solid var(--diary-code-border);
+}
+
+/* Adjust link styles within diary page */
+.diary-page a {
+    color: var(--blue);
+    text-decoration: underline;
+}
+
+.diary-page a:hover {
+    color: var(--red);
+}
+
+/* Adjust headings within main content */
+.diary-page .main-content h2,
+.diary-page .main-content h3,
+.diary-page .main-content h4 {
+    font-family: var(--diary-font);
+    font-weight: bold;
+    color: var(--diary-text-color);
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+/********************* Dark Theme Adjustments *********************/
+
+body.dark-theme {
+    color: var(--dark);
+    background-color: var(--white);
+}
+
+/* Navbar */
+body.dark-theme .navbar {
+    background: var(--white) !important;
+    color: var(--dark);
+}
+
+body.dark-theme .navbar-brand {
+    color: var(--dark);
+}
+
+body.dark-theme .navbar-brand:hover {
+    color: var(--lighter-blue);
+}
+
+body.dark-theme .navbar-nav .nav-item .nav-link {
+    color: var(--grey);
+}
+
+body.dark-theme .navbar-nav .nav-item .nav-link:hover {
+    color: var(--blue);
+}
+
+/* Cards */
+body.dark-theme .card {
+    background: var(--offwhite);
+}
+
+/* Links */
+body.dark-theme a {
+    color: var(--blue);
+}
+
+body.dark-theme a:hover {
+    color: var(--blue);
+}
+
+/* Footer */
+body.dark-theme .footer-social a,
+body.dark-theme .footer-social i {
+    color: var(--dark);
+}
+
+body.dark-theme .footer-social a:hover,
+body.dark-theme .footer-social i:hover {
+    color: var(--blue);
+}
+
+/* Additional adjustments can be added here 

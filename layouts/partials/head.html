@@ -1,6 +1,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Enable Google Analytics -->
     {{ if .Site.Params.googleAnalytics }}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Params.googleAnalytics }}"></script>
@@ -11,19 +12,153 @@
         gtag('config', '{{ .Site.Params.googleAnalytics }}');
     </script>
     {{ end }}
-    <!-- Enable Google Fonts -->
+
+    <!-- Import Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800&family=Frank+Ruhl+Libre:wght@200;300;400;500;600&family=Encode+Sans+Semi+Condensed:wght@400&display=swap" rel="stylesheet">
+
+    <!-- Include Particles.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
     <!-- CSS Styles (including Bootstrap 5 and FontAwesome 6) -->
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/all.min.css">
-    <link disabled id="dark-mode-theme" rel="stylesheet" href="/css/dark.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="/css/my_style.css">
+
     <!-- Site Title -->
     {{ $title := print .Site.Title " | " .Title }}
     {{ if .IsHome }}{{ $title = .Site.Title }}{{ end }}
     <title>{{ $title }}</title>
     <meta name="description" content="{{ if .IsPage }}{{ .Summary }}{{ else }}{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ end }}{{ end }}">
+
+    <!-- Dark Mode and Particles.js Initialization Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const themeToggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = themeToggleBtn ? themeToggleBtn.querySelector('i') : null;
+
+            // Function to get CSS variable values
+            function getCSSVariableValue(variable) {
+                return getComputedStyle(document.body).getPropertyValue(variable).trim();
+            }
+
+            // Function to initialize Particles.js if the div exists
+            function initParticles() {
+                const particlesElement = document.getElementById('particles-js');
+                if (particlesElement) {
+                    particlesJS('particles-js', {
+                        "particles": {
+                            "number": {
+                                "value": 80,
+                                "density": { "enable": true, "value_area": 800 }
+                            },
+                            "color": { "value": getCSSVariableValue('--particle-color') },
+                            "line_linked": {
+                                "enable": true,
+                                "distance": 150,
+                                "color": getCSSVariableValue('--line-color'),
+                                "opacity": 0.2,
+                                "width": 1
+                            },
+                            "move": {
+                                "enable": true,
+                                "speed": 0.5
+                            },
+                            "opacity": {
+                                "value": 0.5,
+                                "random": false
+                            },
+                            "size": {
+                                "value": 3,
+                                "random": true
+                            },
+                            "shape": {
+                                "type": "circle",
+                                "stroke": { "width": 0, "color": "#000000" }
+                            }
+                        },
+                        "interactivity": {
+                            "detect_on": "canvas",
+                            "events": {
+                                "onhover": { "enable": false },
+                                "onclick": { "enable": false },
+                                "resize": true
+                            }
+                        },
+                        "retina_detect": true
+                    });
+                }
+            }
+
+            // Function to toggle dark mode
+            function toggleTheme() {
+                if (!themeToggleBtn) return; // Exit if toggle button doesn't exist
+
+                body.classList.toggle('dark-theme');
+
+                // Change the icon if it exists
+                if (themeIcon) {
+                    if (body.classList.contains('dark-theme')) {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        themeIcon.classList.remove('fa-sun');
+                        themeIcon.classList.add('fa-moon');
+                        localStorage.setItem('theme', 'light');
+                    }
+                }
+
+                // If particles-js div exists, re-initialize particles.js with updated theme
+                if (document.getElementById('particles-js')) {
+                    // Destroy existing particles instance if any
+                    if (window.pJSDom && window.pJSDom.length) {
+                        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+                        window.pJSDom = [];
+                    }
+
+                    // Re-initialize particles.js with the new theme colors
+                    initParticles();
+                }
+            }
+
+            // Apply saved theme from localStorage or system preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-theme');
+                if (themeIcon) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            } else if (savedTheme === 'light') {
+                body.classList.remove('dark-theme');
+                if (themeIcon) {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            } else {
+                // If no preference saved, use system preference
+                const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+                if (prefersDarkScheme.matches) {
+                    body.classList.add('dark-theme');
+                    if (themeIcon) {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                    }
+                }
+            }
+
+            // Initialize particles.js
+            initParticles();
+
+            // Add event listener to theme toggle button if it exists
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', toggleTheme);
+            }
+        });
+    </script>
 </head>
