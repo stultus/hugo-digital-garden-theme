@@ -828,4 +828,7 @@ body.dark-theme .footer-social i:hover {
     color: var(--blue);
 }
 
-/* Additional adjustments can be added here 
+/* Additional adjustments can be added here */
+hr.dropdown-divider {
+    border-top: 2px solid var(--dark);
+}

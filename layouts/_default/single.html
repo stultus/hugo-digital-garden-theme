@@ -1,9 +1,7 @@
 {{ define "main" }}
 
-<!-- Particles.js Container -->
-
-
 <div class="container diary-page" style="max-width: 800px;">
+    <!-- Existing content -->
     <div class="py-4 rounded-3">
         <div class="container-fluid py-2">
             <h1 class="display-2 mb-4 text-center">{{ .Title }}</h1>
@@ -30,8 +28,7 @@
                     Created {{ .Format $dateFormat }} -
                 {{ end }}
                 Last updated: {{ .Lastmod.Format $dateFormat }}
-            </p>
-            <hr class="dropdown-divider">
+            </p> <p></p>
             <div class="row justify-content-between">
                 <div class="col-sm-4">
                     {{ partial "status.html" . }}
@@ -53,15 +50,49 @@
                     {{ end }}
                     {{ end }}
                 </div>
+                <hr class="dropdown-divider">
+
             </div>
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="container-fluid py-2">
         <div class="serif main-content">
             {{ .Content | safeHTML }}
         </div>
     </div>
+
+    <!-- Backlinks Section -->
+    {{ $currentPage := . }}
+{{ $currentPermalink := .Permalink }}
+{{ $currentRelPermalink := .RelPermalink }}
+{{ $currentFilePath := .File.Path }}
+{{ $backlinks := slice }}
+
+{{ range .Site.RegularPages }}
+    {{ $content := .RawContent }}
+    {{ if and (ne .Permalink $currentPermalink)
+        (or
+            (in $content (printf "ref \"%s\"" $currentFilePath))
+            (in $content $currentPermalink)
+            (in $content $currentRelPermalink)
+        )
+    }}
+        {{ $backlinks = $backlinks | append . }}
+    {{ end }}
+{{ end }}
+
+    {{ if gt (len $backlinks) 0 }}
+        <div class="backlinks">
+            <h2>Backlinks</h2>
+            <ul>
+                {{ range $backlinks }}
+                    <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+                {{ end }}
+            </ul>
+        </div>
+    {{ end }}
 </div>
 
 {{ end }}
