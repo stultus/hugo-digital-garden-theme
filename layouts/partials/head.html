@@ -59,17 +59,19 @@
                             "color": { "value": getCSSVariableValue('--particle-color') },
                             "line_linked": {
                                 "enable": true,
-                                "distance": 150,
-                                "color": getCSSVariableValue('--line-color'),
-                                "opacity": 0.2,
+                                "distance": 500,
+                                "color": getCSSVariableValue('--grey'),
+                                "opacity": 0.1,
                                 "width": 1
                             },
                             "move": {
                                 "enable": true,
-                                "speed": 0.5
+                                "speed": 0.5,
+                                "out_mode":"bounce",
+                                "attract.enable":true,
                             },
                             "opacity": {
-                                "value": 0.5,
+                                "value": 0.1,
                                 "random": false
                             },
                             "size": {
@@ -82,10 +84,10 @@
                             }
                         },
                         "interactivity": {
-                            "detect_on": "canvas",
+                            "detect_on": "window",
                             "events": {
                                 "onhover": { "enable": false },
-                                "onclick": { "enable": false },
+                                "onclick": { "enable": true , "mode":"bubble"},
                                 "resize": true
                             }
                         },
