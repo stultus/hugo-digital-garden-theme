@@ -2,19 +2,20 @@
 // https://codepen.io/desandro/pen/JGKyrY
 //
 var $blogposts = $('#blogposts');
-$blogposts.isotope({itemSelector : '.col'});
+$blogposts.isotope({ itemSelector: '.col' });
 var $checkboxes = $('#filters input');
 
-$checkboxes.change( function() {
+$checkboxes.change(function() {
     var inclusives = [];
-    $checkboxes.each( function( i, elem ) {
-      if ( elem.checked ) {
-        inclusives.push( elem.id );
-      }
+    $checkboxes.each(function(i, elem) {
+        if (elem.checked) {
+            inclusives.push('.' + elem.id);
+        }
     });
     var filterValue = inclusives.length ? inclusives.join(', ') : '*';
-    $blogposts.isotope({ filter: filterValue })
+    $blogposts.isotope({ filter: filterValue });
 });
+
 
 // Solution working for a single button checked at a time
 // https://codepen.io/desandro/pen/lxzDA

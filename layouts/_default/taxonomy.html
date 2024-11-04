@@ -1,6 +1,6 @@
 {{ define "main" }}
 
-<!-- Title and Summary -->
+<!-- Breadcrumb Navigation -->
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -10,24 +10,14 @@
         </ol>
     </nav>
 </div>
+
+<!-- Title and Summary -->
 <div class="container my-5">
     <div class="text-center">
         <h1 class="display-2 mb-4">{{ .Title }}</h1>
-        <p class="lead">{{ .Summary }}</p>
-    </div>
-</div>
-
-<!-- Filter Buttons -->
-<div class="container mb-5">
-    <div class="d-flex align-items-center flex-wrap mb-3">
-        <i class="fas fa-filter me-2"></i>
-        <div id="filters" class="d-flex flex-wrap" role="group" aria-label="Filter options">
-            {{ range $name, $taxonomy := .Site.Taxonomies.garden_tags }}
-            {{ $btnid := $name | urlize | printf "js-iso-%s" }}
-            <input type="checkbox" class="btn-check" id="{{ $btnid }}" autocomplete="off">
-            <label class="btn btn-sm btn-outline-secondary rounded-pill me-1 mb-1" for="{{ $btnid }}">{{ $name }}</label>
-            {{ end }}
-        </div>
+        {{ with .Description }}
+        <p class="lead">{{ . }}</p>
+        {{ end }}
     </div>
 </div>
 

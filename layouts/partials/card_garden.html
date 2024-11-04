@@ -1,9 +1,9 @@
 {{ .Scratch.Set "garden_tags_list" ""}}
 {{ range .Params.garden_tags }}
-    {{ $.Scratch.Add "garden_tags_list" ( . | printf " js-iso-%s") }}
+    {{ $tagClass := . | urlize | printf "js-iso-%s" }}
+    {{ $.Scratch.Add "garden_tags_list" (print " " $tagClass) }}
 {{ end }}
-<div class='col {{ $.Scratch.Get "garden_tags_list" }}'>
-    <div class="card top-highlight">
+<div class='col{{ $.Scratch.Get "garden_tags_list" }}'>    <div class="card top-highlight">
         <div class="card-body">
             {{ if .Summary }} 
             <h4 class="card-title">{{ .Title }}</h4>

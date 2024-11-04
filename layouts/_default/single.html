@@ -1,5 +1,13 @@
 {{ define "main" }}
-
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ "/" | relURL }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ "/garden/" | relURL }}">Garden</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
+        </ol>
+    </nav>
+</div>
 <div class="container diary-page" style="max-width: 800px;">
     <!-- Existing content -->
     <div class="py-4 rounded-3">
