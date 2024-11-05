@@ -60,8 +60,9 @@
     --diary-line-color: rgba(0, 0, 0, 0.05);
 }
 
+/* Dark Theme Colors */
 body.dark-theme {
-    /* Dark Theme Colors */
+    /* Override CSS Variables for Dark Mode */
     --blue: #0A94C8;
     --lighter-blue: #addbec;
     --yellow: #FFB603;
@@ -227,7 +228,6 @@ code {
     font-family: monospace;
     font-size: 0.95em;
 }
-
 pre {
     background-color: var(--code-bg-color);
     color: var(--code-text-color);
@@ -238,7 +238,6 @@ pre {
     font-family: monospace;
     font-size: 0.95em;
 }
-
 pre code {
     background: none;
     padding: 0;
@@ -477,6 +476,7 @@ button.anchor {
     button.anchor {
         opacity: 0.1;
     }
+
     h1:hover button.anchor,
     h2:hover button.anchor,
     h3:hover button.anchor,
@@ -702,14 +702,12 @@ body.dark-theme #dark-mode-toggle:hover {
         var(--diary-line-color) 2em
     );
 }
-
 .diary-page .main-content {
     font-family: var(--diary-font);
     font-size: 1em;
     line-height: 1.8em;
     color: var(--diary-text-color);
 }
-
 .diary-page h1 {
     font-family: var(--diary-font);
     font-size: 2em;
@@ -717,61 +715,34 @@ body.dark-theme #dark-mode-toggle:hover {
     text-align: center;
     font-weight: bold;
 }
-
 .diary-page .card-date {
     font-family: var(--diary-font);
     font-size: 0.9em;
     color: var(--diary-date-color);
     text-align: center;
 }
-
 .diary-page .tag-badge {
     background-color: var(--diary-tag-bg);
     color: var(--diary-tag-color);
 }
-
 .diary-page blockquote {
     border-left: 5px solid var(--diary-quote-border);
     background-color: var(--diary-quote-bg);
     color: var(--diary-quote-text);
 }
-
 .diary-page code {
     background-color: var(--diary-code-bg);
     color: var(--diary-code-text);
 }
-
 .diary-page pre {
     background-color: var(--diary-code-bg);
     color: var(--diary-code-text);
     border: 1px solid var(--diary-code-border);
 }
-
 .diary-page .highlight {
     background-color: var(--diary-code-bg);
     color: var(--diary-code-text);
     border: 1px solid var(--diary-code-border);
-}
-
-/* Adjust link styles within diary page */
-.diary-page a {
-    color: var(--blue);
-    text-decoration: underline;
-}
-
-.diary-page a:hover {
-    color: var(--red);
-}
-
-/* Adjust headings within main content */
-.diary-page .main-content h2,
-.diary-page .main-content h3,
-.diary-page .main-content h4 {
-    font-family: var(--diary-font);
-    font-weight: bold;
-    color: var(--diary-text-color);
-    margin-top: 1em;
-    margin-bottom: 0.5em;
 }
 
 /********************* Dark Theme Adjustments *********************/
@@ -828,7 +799,61 @@ body.dark-theme .footer-social i:hover {
     color: var(--blue);
 }
 
-/* Additional adjustments can be added here */
+/* Divider */
 hr.dropdown-divider {
     border-top: 2px solid var(--dark);
+}
+
+/* Card-Garden Styles */
+.card-garden {
+    border: 1px solid #dee2e6;
+    background-color: var(--white); /* Updated to use CSS variables */
+    color: var(--dark); /* Updated to use CSS variables */
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 24px,
+        var(--diary-line-color) 25px /* Use a CSS variable */
+    );
+    background-size: 100% 25px;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+}
+
+/* Styles for tag buttons */
+.card-garden .badge {
+    background-color: #6c757d; /* Bootstrap's bg-secondary */
+    color: #ffffff; /* White text */
+    text-decoration: none;
+    margin-left: 2px;
+    margin-bottom: 2px;
+}
+
+/* Styles for status badges */
+.card-garden .badge.bg-info {
+    background-color: #17a2b8; /* Info blue */
+    color: #ffffff;
+}
+.card-garden .badge.bg-success {
+    background-color: #28a745; /* Success green */
+    color: #ffffff;
+}
+.card-garden .badge.bg-primary {
+    background-color: #007bff; /* Primary blue */
+    color: #ffffff;
+}
+
+/* Dark Mode Styles for Card-Garden */
+body.dark-theme .card-garden {
+    background-color: #343a40; /* Dark gray background for dark mode */
+    color: #ffffff; /* White text for dark mode */
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 24px,
+        rgba(255, 255, 255, 0.1) 25px
+    );
+}
+body.dark-theme .card-garden .badge {
+    background-color: #adb5bd; /* Lighter gray for contrast in dark mode */
+    color: #ffffff; /* White text */
 }
