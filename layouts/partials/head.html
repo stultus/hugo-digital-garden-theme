@@ -19,14 +19,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800&family=Frank+Ruhl+Libre:wght@200;300;400;500;600&family=Encode+Sans+Semi+Condensed:wght@400&display=swap" rel="stylesheet">
 
-    <!-- Include Particles.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-
+    
     <!-- CSS Styles (including Bootstrap 5 and FontAwesome 6) -->
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/css/my_style.css">
 
     <!-- Site Title -->
     {{ $title := print .Site.Title " | " .Title }}
@@ -34,7 +31,7 @@
     <title>{{ $title }}</title>
     <meta name="description" content="{{ if .IsPage }}{{ .Summary }}{{ else }}{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ end }}{{ end }}">
 
-    <!-- Dark Mode and Particles.js Initialization Script -->
+    <!-- Dark Mode Initialization Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const body = document.body;
@@ -46,55 +43,6 @@
                 return getComputedStyle(document.body).getPropertyValue(variable).trim();
             }
 
-            // Function to initialize Particles.js if the div exists
-            function initParticles() {
-                const particlesElement = document.getElementById('particles-js');
-                if (particlesElement) {
-                    particlesJS('particles-js', {
-                        "particles": {
-                            "number": {
-                                "value": 80,
-                                "density": { "enable": true, "value_area": 800 }
-                            },
-                            "color": { "value": getCSSVariableValue('--particle-color') },
-                            "line_linked": {
-                                "enable": true,
-                                "distance": 500,
-                                "color": getCSSVariableValue('--grey'),
-                                "opacity": 0.1,
-                                "width": 1
-                            },
-                            "move": {
-                                "enable": true,
-                                "speed": 0.5,
-                                "out_mode":"bounce",
-                                "attract.enable":true,
-                            },
-                            "opacity": {
-                                "value": 0.1,
-                                "random": false
-                            },
-                            "size": {
-                                "value": 3,
-                                "random": true
-                            },
-                            "shape": {
-                                "type": "circle",
-                                "stroke": { "width": 0, "color": "#000000" }
-                            }
-                        },
-                        "interactivity": {
-                            "detect_on": "window",
-                            "events": {
-                                "onhover": { "enable": false },
-                                "onclick": { "enable": true , "mode":"bubble"},
-                                "resize": true
-                            }
-                        },
-                        "retina_detect": true
-                    });
-                }
-            }
 
             // Function to toggle dark mode
             function toggleTheme() {
@@ -115,17 +63,6 @@
                     }
                 }
 
-                // If particles-js div exists, re-initialize particles.js with updated theme
-                if (document.getElementById('particles-js')) {
-                    // Destroy existing particles instance if any
-                    if (window.pJSDom && window.pJSDom.length) {
-                        window.pJSDom[0].pJS.fn.vendors.destroypJS();
-                        window.pJSDom = [];
-                    }
-
-                    // Re-initialize particles.js with the new theme colors
-                    initParticles();
-                }
             }
 
             // Apply saved theme from localStorage or system preference
@@ -153,10 +90,6 @@
                     }
                 }
             }
-
-            // Initialize particles.js
-            initParticles();
-
             // Add event listener to theme toggle button if it exists
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', toggleTheme);

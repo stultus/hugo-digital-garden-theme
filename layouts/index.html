@@ -1,23 +1,6 @@
 {{ define "main" }}
-<!-- Particles Container -->
-<div id="particles-js"></div>
-<div class="mt-5 pt-5 pb-1">
-    <div class="container">
-        <h1 class="name display-1"><b>{{ .Site.Params.Name }}</b></h1>
-    </div>
-</div>
-
-<div class="mb-5 py-4">
-    <div class="container">
-        <h2 class="bio lh-base fs-1 serif">{{ .Site.Params.Description }}</h2>
-    </div>
-</div>
-
 <div class="container py-3">
     {{ with .Site.GetPage "section" "garden" }}
-    <div class="pb-4">
-        <a class="heading fs-2" href="{{ .Permalink }}">{{ .Title }}</a>
-    </div>
     {{ if .Summary }}
     <p class="subheading">{{ .Summary }}</p>
     {{ end }}
