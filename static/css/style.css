@@ -58,6 +58,11 @@
     --diary-code-text: #333333;
     --diary-code-border: #e0e0e0;
     --diary-line-color: rgba(0, 0, 0, 0.05);
+
+    /* Status Colors */
+    --status-seeding: #e6ae46; /* Gold/Earth */
+    --status-budding: #4a90e2; /* Water/Growth */
+    --status-evergreen: #28a745; /* Green/Mature */
 }
 
 /* Dark Theme Colors */
@@ -262,9 +267,15 @@ pre code {
 }
 .status {
   font-weight: bold;
-  color: green;
-  font-size: medium; /* You can also use 'large', 'x-large', or specify an exact size like '1.2rem' or '18px' */
+  font-size: medium;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
 }
+
+.status.seeding { color: var(--status-seeding); }
+.status.growing { color: var(--status-budding); }
+.status.evergreen { color: var(--status-evergreen); }
 
 
 /********************* Navbar *********************/

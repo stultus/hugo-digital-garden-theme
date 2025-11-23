@@ -1,0 +1,19 @@
+{{- $dest := .Destination -}}
+{{- $text := .Text -}}
+{{- $title := .Title -}}
+
+{{- /* Check if it's a WikiLink (internal link not starting with http/https/mailto) */ -}}
+{{- if and (not (hasPrefix $dest "http")) (not (hasPrefix $dest "mailto:")) (not (hasPrefix $dest "#")) (not (hasPrefix $dest "/")) -}}
+  {{- /* Try to find the page by filename or title */ -}}
+  {{- $page := .Page.GetPage $dest -}}
+  {{- if $page -}}
+    <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
+  {{- else -}}
+    {{- /* If page not found, link to a search or create page (broken link) */ -}}
+    <a href="{{ $dest | safeURL }}" class="broken-link" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
+  {{- end -}}
+{{- else -}}
+  {{- /* Standard link */ -}}
+  <a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}{{ if hasPrefix $dest "http" }} target="_blank" rel="noopener"{{ end }}>{{ $text }}</a>
+{{- end -}}
+
