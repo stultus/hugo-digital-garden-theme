@@ -58,7 +58,12 @@
         })
         .d3Force('charge').strength(-100);
         
-      Graph.zoomToFit(400, 20);
+      // Zoom to fit after a short delay to let the graph settle
+      setTimeout(() => {
+        if (Graph.zoomToFit) {
+          Graph.zoomToFit(400, 20);
+        }
+      }, 100);
     })
     .catch(error => {
       console.error('Graph error:', error);
