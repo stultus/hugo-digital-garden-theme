@@ -1,28 +1,94 @@
 {{ define "main" }}
-<div class="container py-3">
+<div class="container" style="max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem;">
     
-    <!-- Map of Content / Intro -->
+    <!-- Main Content -->
     {{ with .Content }}
-    <div class="mb-5 serif main-content">
+    <div class="content" style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 4rem;">
         {{ . | safeHTML }}
     </div>
     {{ end }}
 
     <!-- Knowledge Graph -->
-    <h3 class="mb-3">Knowledge Graph 🕸️</h3>
-    {{ partial "graph.html" . }}
+    <div style="margin: 4rem 0;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-color);">Network</h2>
+        {{ partial "graph.html" . }}
+    </div>
 
     <!-- Recent Notes -->
-    <h3 class="mb-3">Recent Notes</h3>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
-        {{ range first 6 (where site.RegularPages "Params.type" "!=" "source") }}
-        {{ partial "card_home.html" . }}
-        {{ end }}
+    <div style="margin: 4rem 0;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-color);">Recent</h2>
+        <div style="display: grid; gap: 1.5rem;">
+            {{ range first 10 (where site.RegularPages "Params.type" "!=" "source") }}
+            <article style="padding: 1.5rem; border: 1px solid var(--border-color, #e5e7eb); border-radius: 8px; transition: all 0.2s ease;">
+                <a href="{{ .RelPermalink }}" style="text-decoration: none; color: inherit; display: block;">
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--heading-color);">{{ .Title }}</h3>
+                    {{ with .Params.summary }}
+                    <p style="color: var(--text-muted, #6b7280); margin-bottom: 0.75rem;">{{ . }}</p>
+                    {{ end }}
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--text-muted, #9ca3af);">
+                        <time>{{ .Date.Format "Jan 2, 2006" }}</time>
+                        {{ with .Params.status }}
+                        <span style="padding: 0.25rem 0.75rem; background: var(--status-bg, #f3f4f6); border-radius: 12px; font-size: 0.75rem;">
+                            {{ if eq . "evergreen" }}🌳 Evergreen{{ else if eq . "growing" }}🌿 Growing{{ else }}🌱 Seedling{{ end }}
+                        </span>
+                        {{ end }}
+                    </div>
+                </a>
+            </article>
+            {{ end }}
+        </div>
     </div>
-    
-    <div class="d-flex flex-row-reverse">
-        <a href="{{ "notes/" | relURL }}" role="button" class="btn btn-sm see-all">See all notes</a>
-    </div>
+
 </div>
 
+<style>
+article:hover {
+    border-color: var(--accent-color, #3b82f6) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+.content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.content a {
+    color: var(--link-color, #3b82f6);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.content a:hover {
+    border-bottom-color: var(--link-color, #3b82f6);
+}
+
+.content ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.content li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.content li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color, #3b82f6);
+}
+</style>
 {{ end }}

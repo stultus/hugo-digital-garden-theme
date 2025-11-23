@@ -2,27 +2,24 @@
 {{- $text := .Text -}}
 {{- $title := .Title -}}
 
-{{- /* Check if it's an external link or anchor */ -}}
-{{- if or (hasPrefix $dest "http") (hasPrefix $dest "https") (hasPrefix $dest "mailto:") (hasPrefix $dest "#") -}}
-  {{- /* External link or anchor - pass through as-is */ -}}
+{{- /* Check if it's an external link, anchor, or absolute path starting with /notes/ */ -}}
+{{- if or (hasPrefix $dest "http") (hasPrefix $dest "https") (hasPrefix $dest "mailto:") (hasPrefix $dest "#") (hasPrefix $dest "/notes/") -}}
+  {{- /* Pass through as-is */ -}}
   <a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}{{ if hasPrefix $dest "http" }} target="_blank" rel="noopener"{{ end }}>{{ $text }}</a>
 {{- else -}}
   {{- /* Internal link - try to resolve it */ -}}
   {{- $page := false -}}
   
-  {{- /* Clean the destination - remove trailing slashes and .md extensions */ -}}
+  {{- /* Clean the destination */ -}}
   {{- $cleanDest := $dest -}}
   {{- $cleanDest = strings.TrimSuffix $cleanDest "/" -}}
   {{- $cleanDest = strings.TrimSuffix $cleanDest ".md" -}}
   {{- $cleanDest = strings.TrimPrefix $cleanDest "/" -}}
   
-  {{- /* Try GetPage with various formats */ -}}
+  {{- /* Try various GetPage strategies */ -}}
   {{- $page = site.GetPage (printf "%s.md" $cleanDest) -}}
   {{- if not $page -}}
     {{- $page = site.GetPage $cleanDest -}}
-  {{- end -}}
-  {{- if not $page -}}
-    {{- $page = site.GetPage (printf "/%s" $cleanDest) -}}
   {{- end -}}
   {{- if not $page -}}
     {{- $page = site.GetPage (printf "sources/%s.md" $cleanDest) -}}
@@ -31,7 +28,7 @@
     {{- $page = site.GetPage (printf "sources/%s" $cleanDest) -}}
   {{- end -}}
   
-  {{- /* Title Match - only if we haven't found via path */ -}}
+  {{- /* Title Match for WikiLinks */ -}}
   {{- if not $page -}}
     {{- range site.RegularPages -}}
         {{- if or (eq .Title $cleanDest) (eq (lower .Title) (lower $cleanDest)) -}}
@@ -44,7 +41,6 @@
   {{- if $page -}}
     <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- else -}}
-    {{- /* If page not found, mark as broken */ -}}
-    <a href="#" class="broken-link text-danger" {{ with $title }}title="{{ . }}"{{ end }} style="color: red; text-decoration: line-through;">{{ $text }} (404: {{ $cleanDest }})</a>
+    <a href="#" class="broken-link" {{ with $title }}title="{{ . }}"{{ end }} style="color: red; text-decoration: line-through;">{{ $text }}</a>
   {{- end -}}
 {{- end -}}
