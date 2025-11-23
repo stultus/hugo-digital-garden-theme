@@ -6,8 +6,8 @@
     .then(res => res.json())
     .then(data => {
       const nodes = data.map(page => ({ 
-        id: page.title, 
-        url: page.id,
+        id: page.id, // Use page Title as ID
+        url: page.url,
         status: page.status,
         type: page.type,
         val: 1 
@@ -19,7 +19,7 @@
           source.links.forEach(target => {
             // Check if target exists in nodes to avoid broken graph links
             if (nodes.find(n => n.id === target)) {
-                links.push({ source: source.title, target: target });
+                links.push({ source: source.id, target: target });
             }
           });
         }

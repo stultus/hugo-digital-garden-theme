@@ -7,10 +7,30 @@
   {{- range $matches -}}
     {{- $linkTarget := replace . "[[" "" -}}
     {{- $linkTarget = replace $linkTarget "]]" "" -}}
-    {{- $links = $links | append $linkTarget -}}
+    
+    {{- /* Resolve the link target to a page Title to match the node ID */ -}}
+    {{- $resolvedTitle := $linkTarget -}}
+    {{- $targetPage := site.GetPage $linkTarget -}}
+    {{- if not $targetPage -}}
+        {{- $targetPage = site.GetPage (printf "sources/%s" $linkTarget) -}}
+    {{- end -}}
+    {{- if not $targetPage -}}
+        {{- range site.RegularPages -}}
+            {{- if eq .Title $linkTarget -}}
+                {{- $targetPage = . -}}
+                {{- break -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    
+    {{- if $targetPage -}}
+        {{- $resolvedTitle = $targetPage.Title -}}
+    {{- end -}}
+
+    {{- $links = $links | append $resolvedTitle -}}
   {{- end -}}
   
-  {{- $pageData := dict "id" .RelPermalink "title" .Title "status" (.Params.status | default "seeding") "type" .Params.type "links" $links -}}
+  {{- $pageData := dict "id" .Title "url" .RelPermalink "status" (.Params.status | default "seeding") "type" .Params.type "links" $links -}}
   {{- $pages = $pages | append $pageData -}}
 {{- end -}}
 {{- $pages | jsonify -}}
