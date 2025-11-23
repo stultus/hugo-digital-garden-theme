@@ -4,17 +4,11 @@
 
 {{- /* Check if it's an external link, anchor, or absolute path starting with /notes/ */ -}}
 {{- if or (hasPrefix $dest "http") (hasPrefix $dest "https") (hasPrefix $dest "mailto:") (hasPrefix $dest "#") (hasPrefix $dest "/notes/") -}}
-  {{- /* Pass through as-is */ -}}
+  {{- /* External link - no brackets */ -}}
   <a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}{{ if hasPrefix $dest "http" }} target="_blank" rel="noopener"{{ end }}>{{ $text }}</a>
 {{- else -}}
-  {{- /* Internal link - try to resolve it */ -}}
+  {{- /* Internal link - add brackets and resolve by title */ -}}
   {{- $page := false -}}
-  
-  {{- /* Clean the destination */ -}}
-  {{- $cleanDest := $dest -}}
-  {{- $cleanDest = strings.TrimSuffix $cleanDest "/" -}}
-  {{- $cleanDest = strings.TrimSuffix $cleanDest ".md" -}}
-  {{- $cleanDest = strings.TrimPrefix $cleanDest "/" -}}
   
   {{- /* Title Match - use the link text to find the page */ -}}
   {{- range site.RegularPages -}}
@@ -25,8 +19,8 @@
   {{- end -}}
   
   {{- if $page -}}
-    <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
+    <span class="wikilink">[[</span><a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a><span class="wikilink">]]</span>
   {{- else -}}
-    <span class="broken-link" style="color: #ef4444; text-decoration: line-through;">{{ $text }}</span>
+    <span class="wikilink">[[</span><span class="broken-link" style="color: #ef4444; text-decoration: line-through;">{{ $text }}</span><span class="wikilink">]]</span>
   {{- end -}}
 {{- end -}}

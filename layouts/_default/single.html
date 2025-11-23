@@ -1,69 +1,34 @@
 {{ define "main" }}
-<div class="container mt-4">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ "/" | relURL }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ "/notes/" | relURL }}">Notes</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
-        </ol>
-    </nav>
-</div>
-<div class="container diary-page" style="max-width: 800px;">
-    <!-- Existing content -->
-    <div class="py-4 rounded-3">
-        <div class="container-fluid py-2">
-            {{ if eq .Params.type "source" }}
-            <div class="text-center mb-2">
-                <span class="badge bg-warning text-dark">📚 Source Note</span>
-            </div>
-            {{ end }}
-            <h1 class="display-2 mb-4 text-center">{{ .Title }}</h1>
-        </div>
-        {{ with .Summary }}
-        <p class="text-center fs-4 fst-italic serif">{{ . }}</p>
+<div class="container">
+    
+    <!-- Back Link -->
+    <a href="{{ "/" | relURL }}" class="back-link">← Notes</a>
+    
+    <!-- Title -->
+    <h1>{{ .Title }}</h1>
+    
+    <!-- Metadata -->
+    <div class="metadata">
+        {{ with .Date }}Created {{ .Format "2006-01-02" }}{{ end }}
+        {{ with .Lastmod }}· Updated {{ .Format "2006-01-02" }}{{ end }}
+        {{ with .Params.status }}
+        · <span class="status status-{{ . }}">
+            {{ if eq . "evergreen" }}🌳{{ else if eq . "growing" }}🌿{{ else }}🌱{{ end }}
+            {{ . }}
+        </span>
         {{ end }}
-        <div class="text-center pt-4">
-            {{ with .Params.links }}
-            {{ range sort . "weight" }}
-            <a href="{{ .href }}" role="button" class="btn btn-sm btn-link mx-2" target="_blank">
-                <i class="{{ .icon }} fs-5"></i>
-                {{ .text }}
-            </a>
-            {{ end }}
+        {{ with .Params.tags }}
+        <div style="margin-top: 0.5rem;">
+            {{ range . }}
+            <a href="{{ printf "tags/%s" (urlize .) | relURL }}" class="tag">{{ . }}</a>
             {{ end }}
         </div>
-    </div>
-    <div class="row justify-content-center mb-5">
-        <div class="col-12">
-            <p class="card-date m-0">
-                {{ $dateFormat := .Site.Params.dateFormat | default "Jan 2, 2006" }}
-                {{ with .Date }}
-                    Created {{ .Format $dateFormat }} -
-                {{ end }}
-                Last updated: {{ .Lastmod.Format $dateFormat }}
-            </p> <p></p>
-            <div class="row justify-content-between">
-                <div class="col-sm-4">
-                    {{ partial "status.html" . }}
-                </div>
-                <div class="col-sm-8" style="text-align: right;">
-                    {{ with .Params.tags }}
-                    {{ range . }}
-                    <a href="{{ printf "tags/%s" (urlize .) | relURL }}" class="badge tag-badge">{{ . }}</a>
-                    {{ end }}
-                    {{ end }}
-                </div>
-                <hr class="dropdown-divider">
-
-            </div>
-        </div>
+        {{ end }}
     </div>
 
     <!-- Main Content -->
-    <div class="container-fluid py-2">
-        <div class="serif main-content">
-            {{ .Content | safeHTML }}
-        </div>
+    <div class="content">
+        {{ .Content | safeHTML }}
     </div>
 
     <!-- Backlinks Section -->
@@ -80,7 +45,7 @@
                 (in $content (printf "ref \"%s\"" $currentFilePath))
                 (in $content $currentPermalink)
                 (in $content $currentRelPermalink)
-                (in $content (printf "[[%s]]" $currentPage.Title))
+                (in $content (printf "[%s]" $currentPage.Title))
             )
         }}
             {{ $backlinks = $backlinks | append . }}
@@ -88,15 +53,15 @@
     {{ end }}
     
     {{ if gt (len $backlinks) 0 }}
-        <div class="backlinks mt-5 pt-3 border-top">
-            <h3>Linked References 🔗</h3>
-            <ul class="list-unstyled">
+        <div class="backlinks">
+            <h3>Linked References</h3>
+            <ul>
                 {{ range $backlinks }}
-                    <li class="mb-2">
-                        <a href="{{ .RelPermalink }}" class="text-decoration-none">
-                            <span class="fw-bold">{{ .Title }}</span>
-                        </a>
-                        {{ if .Summary }}<br><small class="text-muted">{{ .Summary | truncate 100 }}</small>{{ end }}
+                    <li>
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                        {{ if .Summary }}
+                        <div class="backlinks-summary">{{ .Summary | truncate 120 }}</div>
+                        {{ end }}
                     </li>
                 {{ end }}
             </ul>
