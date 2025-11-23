@@ -4,13 +4,34 @@
 
 {{- /* Check if it's a WikiLink (internal link not starting with http/https/mailto) */ -}}
 {{- if and (not (hasPrefix $dest "http")) (not (hasPrefix $dest "mailto:")) (not (hasPrefix $dest "#")) (not (hasPrefix $dest "/")) -}}
-  {{- /* Try to find the page by filename or title */ -}}
+  {{- /* Try to find the page by exact name match */ -}}
   {{- $page := .Page.GetPage $dest -}}
+  
+  {{- if not $page -}}
+    {{- /* Fallback 1: Try searching in root content folder */ -}}
+    {{- $page = site.GetPage $dest -}}
+  {{- end -}}
+
+  {{- if not $page -}}
+    {{- /* Fallback 2: Try searching in sources folder */ -}}
+    {{- $page = site.GetPage (printf "sources/%s" $dest) -}}
+  {{- end -}}
+
+  {{- if not $page -}}
+    {{- /* Fallback 3: Try searching by Title across all regular pages */ -}}
+    {{- range site.RegularPages -}}
+        {{- if eq .Title $dest -}}
+            {{- $page = . -}}
+            {{- break -}}
+        {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
   {{- if $page -}}
     <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- else -}}
     {{- /* If page not found, mark as broken */ -}}
-    <a href="{{ $dest | safeURL }}" class="broken-link" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
+    <a href="{{ $dest | safeURL }}" class="broken-link text-danger" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- end -}}
 {{- else -}}
   {{- /* Standard link */ -}}
