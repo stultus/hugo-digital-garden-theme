@@ -95,10 +95,11 @@
           }
         });
         
-      // Apply d3 forces separately
-      Graph.d3Force('charge').strength(-300);
-      Graph.d3Force('link').distance(80);
-      Graph.d3Force('center').strength(0.3);
+      // Apply d3 forces separately with stronger repulsion for spacing
+      Graph.d3Force('charge').strength(-800);
+      Graph.d3Force('link').distance(150);
+      Graph.d3Force('center').strength(0.2);
+      Graph.d3Force('collide', d3.forceCollide(30));
     })
     .catch(error => {
       console.error('Graph error:', error);
