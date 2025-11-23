@@ -139,6 +139,10 @@ strong {
 
 table {
     font-family: var(--summary);
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 thead {
     background-color: whitesmoke;
@@ -147,7 +151,7 @@ thead {
     border-bottom-width: 1px;
 }
 table th, table td {
-    padding-right: 40px;
+    padding-right: 15px;
     padding-left: 10px;
 }
 table th {
@@ -199,7 +203,7 @@ table td {
 
 @media (max-width: 990px) {
     .card {
-        margin: 20px;
+        margin: 10px;
     }
 }
 
@@ -232,6 +236,7 @@ code {
     border-radius: 4px;
     font-family: monospace;
     font-size: 0.95em;
+    word-wrap: break-word;
 }
 pre {
     background-color: var(--code-bg-color);
@@ -247,6 +252,7 @@ pre code {
     background: none;
     padding: 0;
     border: none;
+    white-space: pre;
 }
 
 .btn-link {
@@ -332,12 +338,14 @@ pre code {
 .name {
     font-family: var(--title);
     font-weight: 800;
+    font-size: 2.5rem;
 }
 
 .bio {
     max-width: 750px;
     font-weight: 200;
     font-family: var(--summary);
+    font-size: 1.1rem;
 }
 .heading {
     font-weight: 400;
@@ -423,13 +431,26 @@ pre code {
     font-family: var(--title);
     font-weight: 700;
     color: var(--dark);
+    font-size: 2.5rem;
+}
+
+@media (max-width: 768px) {
+    .display-2 {
+        font-size: 2rem;
+    }
+    .name {
+        font-size: 2rem;
+    }
+    .bio {
+        font-size: 1rem;
+    }
 }
 
 /********************* Content *********************/
 
 .main-content {
-    line-height: 40px;
-    font-size: 22px;
+    line-height: 1.6;
+    font-size: 1.1rem;
 }
 a {
     color: var(--blue);
@@ -454,6 +475,8 @@ a:hover {
     border-left-width: 5px;
     padding-left: 10px;
     border-color: var(--dark);
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 /********************* Footer *********************/
@@ -713,6 +736,13 @@ body.dark-theme #dark-mode-toggle:hover {
         var(--diary-line-color) 2em
     );
 }
+
+@media (max-width: 768px) {
+    .diary-page {
+        padding: 1em;
+    }
+}
+
 .diary-page .main-content {
     font-family: var(--diary-font);
     font-size: 1em;
@@ -749,6 +779,7 @@ body.dark-theme #dark-mode-toggle:hover {
     background-color: var(--diary-code-bg);
     color: var(--diary-code-text);
     border: 1px solid var(--diary-code-border);
+    overflow-x: auto;
 }
 .diary-page .highlight {
     background-color: var(--diary-code-bg);
