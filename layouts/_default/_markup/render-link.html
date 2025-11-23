@@ -16,31 +16,25 @@
   {{- $cleanDest = strings.TrimSuffix $cleanDest ".md" -}}
   {{- $cleanDest = strings.TrimPrefix $cleanDest "/" -}}
   
-  {{- /* 1. Exact Path Match */ -}}
-  {{- $page = site.GetPage $cleanDest -}}
-  
-  {{- /* 2. Try with .md extension */ -}}
+  {{- /* Try GetPage with various formats */ -}}
+  {{- $page = site.GetPage (printf "%s.md" $cleanDest) -}}
   {{- if not $page -}}
-    {{- $page = site.GetPage (printf "%s.md" $cleanDest) -}}
+    {{- $page = site.GetPage $cleanDest -}}
   {{- end -}}
-  
-  {{- /* 3. Sources Folder Match */ -}}
+  {{- if not $page -}}
+    {{- $page = site.GetPage (printf "/%s" $cleanDest) -}}
+  {{- end -}}
+  {{- if not $page -}}
+    {{- $page = site.GetPage (printf "sources/%s.md" $cleanDest) -}}
+  {{- end -}}
   {{- if not $page -}}
     {{- $page = site.GetPage (printf "sources/%s" $cleanDest) -}}
   {{- end -}}
   
-  {{- /* 4. Title Match (for WikiLinks) */ -}}
-  {{- if not $page -}}
-    {{- range where site.RegularPages "Title" $cleanDest -}}
-        {{- $page = . -}}
-        {{- break -}}
-    {{- end -}}
-  {{- end -}}
-  
-  {{- /* 5. Case-Insensitive Title Match */ -}}
+  {{- /* Title Match - only if we haven't found via path */ -}}
   {{- if not $page -}}
     {{- range site.RegularPages -}}
-        {{- if eq (lower .Title) (lower $cleanDest) -}}
+        {{- if or (eq .Title $cleanDest) (eq (lower .Title) (lower $cleanDest)) -}}
             {{- $page = . -}}
             {{- break -}}
         {{- end -}}
@@ -48,10 +42,9 @@
   {{- end -}}
   
   {{- if $page -}}
-    {{- /* Use RelPermalink which now generates absolute paths from site root */ -}}
     <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- else -}}
     {{- /* If page not found, mark as broken */ -}}
-    <a href="#" class="broken-link text-danger" {{ with $title }}title="{{ . }}"{{ end }} style="color: red; text-decoration: line-through;">{{ $text }} (broken: {{ $dest }})</a>
+    <a href="#" class="broken-link text-danger" {{ with $title }}title="{{ . }}"{{ end }} style="color: red; text-decoration: line-through;">{{ $text }} (404: {{ $cleanDest }})</a>
   {{- end -}}
 {{- end -}}
