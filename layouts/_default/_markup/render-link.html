@@ -28,10 +28,10 @@
     {{- $page = site.GetPage (printf "sources/%s" $cleanDest) -}}
   {{- end -}}
   
-  {{- /* Title Match for WikiLinks */ -}}
+  {{- /* Title Match for WikiLinks - use the link text as title */ -}}
   {{- if not $page -}}
     {{- range site.RegularPages -}}
-        {{- if or (eq .Title $cleanDest) (eq (lower .Title) (lower $cleanDest)) -}}
+        {{- if or (eq .Title $text) (eq (lower .Title) (lower $text)) (eq .Title $cleanDest) (eq (lower .Title) (lower $cleanDest)) -}}
             {{- $page = . -}}
             {{- break -}}
         {{- end -}}
@@ -41,6 +41,6 @@
   {{- if $page -}}
     <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- else -}}
-    <a href="#" class="broken-link" {{ with $title }}title="{{ . }}"{{ end }} style="color: red; text-decoration: line-through;">{{ $text }}</a>
+    <span class="broken-link" style="color: #ef4444;">{{ $text }}</span>
   {{- end -}}
 {{- end -}}
