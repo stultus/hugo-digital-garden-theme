@@ -18,7 +18,7 @@
     <div style="margin: 3rem 0;">
         <h2>Recent</h2>
         <ul class="recent-list">
-            {{ range first 15 (where site.RegularPages "Params.type" "!=" "source") }}
+            {{ range first 5 (where site.RegularPages "Params.type" "!=" "source") }}
             <li>
                 <a href="{{ .RelPermalink }}">{{ .Title }}</a>
                 <div class="recent-meta">
