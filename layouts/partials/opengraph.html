@@ -1,0 +1,16 @@
+<meta property="og:title" content="{{ .Title }}" />
+<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}" />
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+{{ with .Params.images }}
+  {{ range first 1 . }}
+    <meta property="og:image" content="{{ . | absURL }}" />
+  {{ end }}
+{{ else }}
+  {{ with .Site.Params.images }}
+    {{ range first 1 . }}
+      <meta property="og:image" content="{{ . | absURL }}" />
+    {{ end }}
+  {{ end }}
+{{ end }}
+
