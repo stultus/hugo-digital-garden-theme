@@ -48,6 +48,7 @@
   {{- end -}}
   
   {{- if $page -}}
+    {{- /* Use RelPermalink which now generates absolute paths from site root */ -}}
     <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- else -}}
     {{- /* If page not found, mark as broken */ -}}
