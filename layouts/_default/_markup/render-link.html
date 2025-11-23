@@ -2,50 +2,55 @@
 {{- $text := .Text -}}
 {{- $title := .Title -}}
 
-{{- /* Check if it's a WikiLink (internal link not starting with http/https/mailto) */ -}}
-{{- if and (not (hasPrefix $dest "http")) (not (hasPrefix $dest "mailto:")) (not (hasPrefix $dest "#")) (not (hasPrefix $dest "/")) -}}
-  
-  {{- /* Handle "[[Text]]" format which Hugo might pass as destination "Text" */ -}}
+{{- /* Check if it's an external link or anchor */ -}}
+{{- if or (hasPrefix $dest "http") (hasPrefix $dest "https") (hasPrefix $dest "mailto:") (hasPrefix $dest "#") -}}
+  {{- /* External link or anchor - pass through as-is */ -}}
+  <a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}{{ if hasPrefix $dest "http" }} target="_blank" rel="noopener"{{ end }}>{{ $text }}</a>
+{{- else -}}
+  {{- /* Internal link - try to resolve it */ -}}
   {{- $page := false -}}
-
-  {{- /* 1. Exact Path Match (fastest) */ -}}
-  {{- $page = .Page.GetPage $dest -}}
   
-  {{- /* 2. Root Content Match (e.g. "story.md" or just "story") */ -}}
+  {{- /* Clean the destination - remove trailing slashes and .md extensions */ -}}
+  {{- $cleanDest := $dest -}}
+  {{- $cleanDest = strings.TrimSuffix $cleanDest "/" -}}
+  {{- $cleanDest = strings.TrimSuffix $cleanDest ".md" -}}
+  {{- $cleanDest = strings.TrimPrefix $cleanDest "/" -}}
+  
+  {{- /* 1. Exact Path Match */ -}}
+  {{- $page = site.GetPage $cleanDest -}}
+  
+  {{- /* 2. Try with .md extension */ -}}
   {{- if not $page -}}
-    {{- $page = site.GetPage $dest -}}
+    {{- $page = site.GetPage (printf "%s.md" $cleanDest) -}}
   {{- end -}}
-
+  
   {{- /* 3. Sources Folder Match */ -}}
   {{- if not $page -}}
-    {{- $page = site.GetPage (printf "sources/%s" $dest) -}}
+    {{- $page = site.GetPage (printf "sources/%s" $cleanDest) -}}
   {{- end -}}
-
-  {{- /* 4. Title Match (The Silver Bullet for WikiLinks) */ -}}
+  
+  {{- /* 4. Title Match (for WikiLinks) */ -}}
   {{- if not $page -}}
-    {{- range where site.RegularPages "Title" $dest -}}
+    {{- range where site.RegularPages "Title" $cleanDest -}}
         {{- $page = . -}}
         {{- break -}}
     {{- end -}}
   {{- end -}}
-
-  {{- /* 5. Case-Insensitive Title Match (Last Resort) */ -}}
+  
+  {{- /* 5. Case-Insensitive Title Match */ -}}
   {{- if not $page -}}
     {{- range site.RegularPages -}}
-        {{- if eq (lower .Title) (lower $dest) -}}
+        {{- if eq (lower .Title) (lower $cleanDest) -}}
             {{- $page = . -}}
             {{- break -}}
         {{- end -}}
     {{- end -}}
   {{- end -}}
-
+  
   {{- if $page -}}
     <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- else -}}
     {{- /* If page not found, mark as broken */ -}}
-    <a href="#" class="broken-link text-danger" {{ with $title }}title="{{ . }}"{{ end }} style="color: red; text-decoration: line-through;">{{ $text }}</a>
+    <a href="#" class="broken-link text-danger" {{ with $title }}title="{{ . }}"{{ end }} style="color: red; text-decoration: line-through;">{{ $text }} (broken: {{ $dest }})</a>
   {{- end -}}
-{{- else -}}
-  {{- /* Standard link */ -}}
-  <a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}{{ if hasPrefix $dest "http" }} target="_blank" rel="noopener"{{ end }}>{{ $text }}</a>
 {{- end -}}
