@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap');
 
 /* CSS Variables - Light Mode */
 :root {
@@ -24,6 +25,7 @@
     --font-heading: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
     --font-body: 'IBM Plex Mono', 'Menlo', 'Monaco', monospace;
     --font-code: 'Fira Code', 'Cascadia Code', monospace;
+    --font-malayalam: 'Manjari', sans-serif;
     
     /* Status Colors */
     --status-seeding: #f59e0b;
@@ -543,5 +545,32 @@ h6:hover .anchor,
         right: 1rem;
         left: 1rem;
         text-align: center;
+    }
+}
+
+/* Malayalam Typography */
+/* Apply Manjari font to content with Malayalam language attribute */
+[lang="malayalam"],
+.language-malayalam,
+*[lang="ml"] {
+    font-family: var(--font-malayalam);
+    line-height: 1.8;
+    font-size: 1.1em;
+}
+
+/* Ensure Malayalam text in quotes and paragraphs uses Manjari */
+blockquote[lang="malayalam"],
+blockquote[lang="ml"],
+p:lang(ml),
+.content:lang(ml) {
+    font-family: var(--font-malayalam);
+    line-height: 1.8;
+}
+
+/* Auto-detect Malayalam script using Unicode range */
+/* Malayalam Unicode range: U+0D00-U+0D7F */
+@supports (font-family: var(--font-malayalam)) {
+    body {
+        font-family: var(--font-body), var(--font-malayalam);
     }
 }
