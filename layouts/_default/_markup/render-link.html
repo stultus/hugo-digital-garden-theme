@@ -7,7 +7,7 @@
   {{- /* External link - no brackets */ -}}
   <a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}{{ if hasPrefix $dest "http" }} target="_blank" rel="noopener"{{ end }}>{{ $text }}</a>
 {{- else -}}
-  {{- /* Internal link - NO brackets, just resolve by title */ -}}
+  {{- /* Internal link - WITH brackets */ -}}
   {{- $page := false -}}
   
   {{- /* Title Match - use the link text to find the page */ -}}
@@ -19,8 +19,8 @@
   {{- end -}}
   
   {{- if $page -}}
-    <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
+    <span class="wikilink-bracket">[[</span><a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a><span class="wikilink-bracket">]]</span>
   {{- else -}}
-    <span class="broken-link" style="color: #ef4444; text-decoration: line-through;">{{ $text }}</span>
+    <span class="wikilink-bracket">[[</span><span class="broken-link" style="color: #ef4444; text-decoration: line-through;">{{ $text }}</span><span class="wikilink-bracket">]]</span>
   {{- end -}}
 {{- end -}}

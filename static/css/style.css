@@ -163,6 +163,13 @@ a:hover {
 }
 
 /* Wiki-link Brackets */
+.wikilink-bracket {
+    color: var(--bracket);
+    font-size: 0.9em;
+    user-select: none;
+    pointer-events: none;
+}
+
 .wikilink {
     color: var(--bracket);
     font-weight: normal;
