@@ -52,7 +52,7 @@
             <ul>
                 {{ range $backlinks }}
                     <li>
-                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                        <span class="wikilink-bracket">[[</span><a href="{{ .RelPermalink }}">{{ .Title }}</a><span class="wikilink-bracket">]]</span>
                         {{ if .Summary }}<p class="summary">{{ .Summary | truncate 100 }}</p>{{ end }}
                     </li>
                 {{ end }}
