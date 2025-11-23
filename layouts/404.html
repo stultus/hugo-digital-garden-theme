@@ -1,11 +1,111 @@
 {{ define "main" }}
-<div class="container">
-    <div class="py-5 rounded-3">
-        <div class="container-fluid py-2">
-            <h1 class="display-2 mb-4">404: 😵 Ouch !</h1>
-            <p class="bio col-md-8 fs-4 serif">The page you are looking for could not be found.</p>
-            <p>It may have been deleted, or it may have never existed at all 😧</p>
+<div class="container" style="text-align: center; padding: 4rem 1.5rem;">
+    <div class="error-404">
+        <pre style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.4;">
+    _____________________
+   /                     \
+  |  MARAUDER'S MAP      |
+  |  ___________________  |
+  | |                   | |
+  | |   404 ERROR       | |
+  | |   Page Not Found  | |
+  | |___________________| |
+  |                       |
+  | "I solemnly swear    |
+  |  that I am up to     |
+  |  no good."           |
+  \_______________________/
+        </pre>
+
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary); font-family: var(--font-heading);">
+            404
+        </h1>
+
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-secondary); font-weight: 500;">
+            Mischief Not Managed
+        </h2>
+
+        <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            The page you're looking for has vanished like a Patronus at dawn. 
+            Perhaps it was hit by an <em>Obliviate</em> charm?
+        </p>
+
+        <div style="margin-bottom: 2.5rem;">
+            <p style="color: var(--text-muted); font-size: 0.95rem; font-style: italic;">
+                "It does not do to dwell on dreams and forget to live."
+            </p>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
+                — Albus Dumbledore
+            </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+            <a href="{{ "/" | relURL }}" style="display: inline-block; padding: 0.75rem 1.5rem; background-color: var(--accent); color: var(--bg-primary); text-decoration: none; border-radius: 4px; font-weight: 500; transition: all 0.2s ease; border: none;">
+                ⚡ Return to Hogwarts (Home)
+            </a>
+            
+            <a href="{{ "/notes/" | relURL }}" style="color: var(--link); text-decoration: none; border-bottom: 1px dotted var(--link); transition: border-bottom 0.2s ease;">
+                📚 Browse the Library of Notes
+            </a>
+        </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                <strong>Possible reasons for this mishap:</strong>
+            </p>
+            <ul style="list-style: none; padding: 0; color: var(--text-secondary); font-size: 0.9rem; max-width: 500px; margin: 0 auto; text-align: left;">
+                <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--accent);">→</span>
+                    The page was moved by a House Elf
+                </li>
+                <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--accent);">→</span>
+                    Peeves hid it somewhere in the castle
+                </li>
+                <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--accent);">→</span>
+                    It's stuck in the Room of Requirement
+                </li>
+                <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--accent);">→</span>
+                    You need to say "Alohomora" first
+                </li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 2.5rem;">
+            <p style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-code);">
+                <code style="background-color: var(--code-bg); padding: 0.2em 0.4em; border-radius: 3px;">
+                    Error Code: 404 | Status: MISCHIEF_NOT_MANAGED
+                </code>
+            </p>
         </div>
     </div>
 </div>
+
+<style>
+.error-404 a:hover {
+    border-bottom: 1px solid var(--link);
+}
+
+.error-404 a[style*="background-color"]:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 768px) {
+    .error-404 pre {
+        font-size: 0.65rem;
+    }
+    
+    .error-404 h1 {
+        font-size: 2rem !important;
+    }
+    
+    .error-404 h2 {
+        font-size: 1.2rem !important;
+    }
+}
+</style>
 {{ end }}

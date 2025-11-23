@@ -1,6 +1,7 @@
 <div id="graph-container"></div>
 
-<script src="//unpkg.com/force-graph"></script>
+<script src="https://unpkg.com/d3@7"></script>
+<script src="https://unpkg.com/force-graph"></script>
 <script>
   fetch('{{ "index.json" | relURL }}')
     .then(res => res.ok ? res.json() : Promise.reject('Failed to load'))
