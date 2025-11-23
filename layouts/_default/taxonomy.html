@@ -1,33 +1,34 @@
 {{ define "main" }}
-
-<!-- Breadcrumb Navigation -->
-<div class="container mt-4">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ "/" | relURL }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ "/notes/" | relURL }}">Notes</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
-        </ol>
-    </nav>
-</div>
-
-<!-- Title and Summary -->
-<div class="container my-5">
-    <div class="text-center">
-        <h1 class="display-2 mb-4">{{ .Title }}</h1>
-        {{ with .Description }}
-        <p class="lead">{{ . }}</p>
-        {{ end }}
-    </div>
-</div>
-
-<!-- Garden Post Cards -->
 <div class="container">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="blogposts">
-        {{ range .Pages.ByPublishDate.Reverse }}
-        {{ partial "card_garden.html" . }}
-        {{ end }}
+    
+    <!-- Back Link -->
+    <a href="{{ "/" | relURL }}" class="back-link">← Notes</a>
+    
+    <!-- Title -->
+    <h1>{{ .Title }}</h1>
+    
+    <!-- Metadata -->
+    <div class="metadata">
+        {{ .Data.Plural | humanize }}: {{ len .Pages }} notes
     </div>
-</div>
 
+    <!-- Notes List -->
+    <ul class="recent-list">
+        {{ range .Pages }}
+        <li>
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <div class="recent-meta">
+                {{ .Date.Format "2006-01-02" }}
+                {{ with .Params.status }}
+                · <span class="status status-{{ . }}">
+                    {{ if eq . "evergreen" }}🌳{{ else if eq . "growing" }}🌿{{ else }}🌱{{ end }}
+                    {{ . }}
+                </span>
+                {{ end }}
+            </div>
+        </li>
+        {{ end }}
+    </ul>
+
+</div>
 {{ end }}
