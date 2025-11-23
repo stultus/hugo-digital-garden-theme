@@ -2,8 +2,14 @@
 
 <script src="//unpkg.com/force-graph"></script>
 <script>
-  fetch('/index.json')
-    .then(res => res.json())
+  // Use site base URL + index.json to handle subpaths correctly
+  fetch('{{ "index.json" | relURL }}')
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return res.json();
+    })
     .then(data => {
       const nodes = data.map(page => ({ 
         id: page.id, // Use page Title as ID
@@ -41,5 +47,9 @@
         
         // Fit to canvas
         Graph.zoomToFit(400);
+    })
+    .catch(error => {
+        console.error('Error fetching graph data:', error);
+        document.getElementById('graph-container').innerHTML = '<p class="text-center p-5 text-muted">Could not load graph data. Please try again later.</p>';
     });
 </script>
