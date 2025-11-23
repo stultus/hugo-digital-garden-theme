@@ -1,0 +1,44 @@
+<div id="graph-container" style="width: 100%; height: 500px; border: 1px solid var(--code-border-color); border-radius: 4px; margin-bottom: 2rem;"></div>
+
+<script src="//unpkg.com/force-graph"></script>
+<script>
+  fetch('/index.json')
+    .then(res => res.json())
+    .then(data => {
+      const nodes = data.map(page => ({ 
+        id: page.title, 
+        url: page.id,
+        status: page.status,
+        val: 1 
+      }));
+      
+      const links = [];
+      data.forEach(source => {
+        if (source.links) {
+          source.links.forEach(target => {
+            // Check if target exists in nodes to avoid broken graph links
+            if (nodes.find(n => n.id === target)) {
+                links.push({ source: source.title, target: target });
+            }
+          });
+        }
+      });
+
+      const Graph = ForceGraph()
+        (document.getElementById('graph-container'))
+        .graphData({ nodes, links })
+        .nodeLabel('id')
+        .nodeColor(node => {
+            if (node.status === 'evergreen') return 'var(--status-evergreen)'; // Green
+            if (node.status === 'growing') return 'var(--status-budding)';   // Blue
+            return 'var(--status-seeding)'; // Gold
+        })
+        .onNodeClick(node => {
+            window.location.href = node.url;
+        });
+        
+        // Fit to canvas
+        Graph.zoomToFit(400);
+    });
+</script>
+

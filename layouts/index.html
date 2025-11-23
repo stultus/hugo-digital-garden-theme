@@ -1,20 +1,28 @@
 {{ define "main" }}
 <div class="container py-3">
-    {{ with .Site.GetPage "section" "garden" }}
-    {{ if .Summary }}
-    <p class="subheading">{{ .Summary }}</p>
+    
+    <!-- Map of Content / Intro -->
+    {{ with .Content }}
+    <div class="mb-5 serif main-content">
+        {{ . }}
+    </div>
     {{ end }}
-    {{ end }}
+
+    <!-- Knowledge Graph -->
+    <h3 class="mb-3">Knowledge Graph 🕸️</h3>
+    {{ partial "graph.html" . }}
+
+    <!-- Recent Notes -->
+    <h3 class="mb-3">Recent Notes</h3>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
-        {{ range (where site.RegularPages "Section" "garden") }}
+        {{ range first 6 (where site.RegularPages "Type" "note") }}
         {{ partial "card_home.html" . }}
         {{ end }}
     </div>
-    {{ with .Site.GetPage "section" "garden" }}
+    
     <div class="d-flex flex-row-reverse">
-        <a href="{{ .Permalink }}" role="button" class="btn btn-sm see-all">See all articles</a>
+        <a href="/notes/" role="button" class="btn btn-sm see-all">See all notes</a>
     </div>
-    {{ end }}
 </div>
 
 {{ end }}

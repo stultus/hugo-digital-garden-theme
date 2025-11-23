@@ -3,7 +3,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ "/" | relURL }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ "/garden/" | relURL }}">Garden</a></li>
+            <li class="breadcrumb-item"><a href="{{ "/notes/" | relURL }}">Notes</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
         </ol>
     </nav>
@@ -47,16 +47,6 @@
                     <a href="/tags/{{ urlize . }}" class="badge tag-badge">{{ . }}</a>
                     {{ end }}
                     {{ end }}
-                    {{ with .Params.garden_tags }}
-                    {{ range . }}
-                    <a href="/garden_tags/{{ urlize . }}" class="badge tag-badge">{{ . }}</a>
-                    {{ end }}
-                    {{ end }}
-                    {{ with .Params.project_tags }}
-                    {{ range . }}
-                    <a href="/project_tags/{{ urlize . }}" class="badge tag-badge">{{ . }}</a>
-                    {{ end }}
-                    {{ end }}
                 </div>
                 <hr class="dropdown-divider">
 
@@ -73,30 +63,36 @@
 
     <!-- Backlinks Section -->
     {{ $currentPage := . }}
-{{ $currentPermalink := .Permalink }}
-{{ $currentRelPermalink := .RelPermalink }}
-{{ $currentFilePath := .File.Path }}
-{{ $backlinks := slice }}
-
-{{ range .Site.RegularPages }}
-    {{ $content := .RawContent }}
-    {{ if and (ne .Permalink $currentPermalink)
-        (or
-            (in $content (printf "ref \"%s\"" $currentFilePath))
-            (in $content $currentPermalink)
-            (in $content $currentRelPermalink)
-        )
-    }}
-        {{ $backlinks = $backlinks | append . }}
+    {{ $currentPermalink := .Permalink }}
+    {{ $currentRelPermalink := .RelPermalink }}
+    {{ $currentFilePath := .File.Path }}
+    {{ $backlinks := slice }}
+    
+    {{ range .Site.RegularPages }}
+        {{ $content := .RawContent }}
+        {{ if and (ne .Permalink $currentPermalink)
+            (or
+                (in $content (printf "ref \"%s\"" $currentFilePath))
+                (in $content $currentPermalink)
+                (in $content $currentRelPermalink)
+                (in $content (printf "[[%s]]" $currentPage.Title))
+            )
+        }}
+            {{ $backlinks = $backlinks | append . }}
+        {{ end }}
     {{ end }}
-{{ end }}
-
+    
     {{ if gt (len $backlinks) 0 }}
-        <div class="backlinks">
-            <h2>Backlinks</h2>
-            <ul>
+        <div class="backlinks mt-5 pt-3 border-top">
+            <h3>Linked References 🔗</h3>
+            <ul class="list-unstyled">
                 {{ range $backlinks }}
-                    <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+                    <li class="mb-2">
+                        <a href="{{ .RelPermalink }}" class="text-decoration-none">
+                            <span class="fw-bold">{{ .Title }}</span>
+                        </a>
+                        {{ if .Summary }}<br><small class="text-muted">{{ .Summary | truncate 100 }}</small>{{ end }}
+                    </li>
                 {{ end }}
             </ul>
         </div>

@@ -1,11 +1,11 @@
 {{/* card_garden.html */}}
 
-{{ .Scratch.Set "garden_tags_list" "" }}
-{{ range .Params.garden_tags }}
+{{ .Scratch.Set "tags_list" "" }}
+{{ range .Params.tags }}
     {{ $tagClass := . | urlize | printf "js-iso-%s" }}
-    {{ $.Scratch.Add "garden_tags_list" (print " " $tagClass) }}
+    {{ $.Scratch.Add "tags_list" (print " " $tagClass) }}
 {{ end }}
-<div class="col{{ $.Scratch.Get "garden_tags_list" }}">
+<div class="col{{ $.Scratch.Get "tags_list" }}">
     <div class="card-garden p-4 rounded-3 position-relative">
         <!-- Card Content -->
         <h4 class="mb-3 text-center">{{ .Title }}</h4>
@@ -15,9 +15,8 @@
         <p class="card-date text-center mb-2">
             {{ $dateFormat := .Site.Params.dateFormat | default "Jan 2, 2006" }}
             {{ with .Date }}
-                Created {{ .Format $dateFormat }} -
+                {{ .Format $dateFormat }}
             {{ end }}
-            Last updated: {{ .Lastmod.Format $dateFormat }}
         </p>
         <hr class="dropdown-divider">
         <div class="d-flex justify-content-between align-items-center">
@@ -30,19 +29,9 @@
                 <a href="/tags/{{ urlize . }}" class="badge">{{ . }}</a>
                 {{ end }}
                 {{ end }}
-                {{ with .Params.garden_tags }}
-                {{ range . }}
-                <a href="/garden_tags/{{ urlize . }}" class="badge">{{ . }}</a>
-                {{ end }}
-                {{ end }}
-                {{ with .Params.project_tags }}
-                {{ range . }}
-                <a href="/project_tags/{{ urlize . }}" class="badge">{{ . }}</a>
-                {{ end }}
-                {{ end }}
             </div>
         </div>
         <a href="{{ .Permalink }}" class="stretched-link"></a>
     </div>
 </div>
-{{ .Scratch.Delete "garden_tags_list" }}
+{{ .Scratch.Delete "tags_list" }}

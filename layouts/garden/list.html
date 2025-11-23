@@ -5,7 +5,6 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ "/" | relURL }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ "/garden/" | relURL }}">Garden</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
         </ol>
     </nav>
@@ -22,7 +21,7 @@
     <div class="d-flex align-items-center flex-wrap mb-3">
         <i class="fas fa-filter me-2"></i>
         <div id="filters" class="d-flex flex-wrap" role="group" aria-label="Filter options">
-            {{ range $name, $taxonomy := .Site.Taxonomies.garden_tags }}
+            {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
             {{ $btnid := $name | urlize | printf "js-iso-%s" }}
             <input type="checkbox" class="btn-check" id="{{ $btnid }}" autocomplete="off">
             <label class="btn btn-sm btn-outline-secondary rounded-pill me-1 mb-1" for="{{ $btnid }}">{{ $name }}</label>

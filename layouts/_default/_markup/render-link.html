@@ -9,14 +9,8 @@
   {{- if $page -}}
     <a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- else -}}
-    {{- /* Fallback: Try looking in the garden section explicitly if not found */ -}}
-    {{- $gardenPage := .Page.GetPage (printf "garden/%s" $dest) -}}
-    {{- if $gardenPage -}}
-        <a href="{{ $gardenPage.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
-    {{- else -}}
-        {{- /* If still not found, mark as broken */ -}}
-        <a href="{{ $dest | safeURL }}" class="broken-link" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
-    {{- end -}}
+    {{- /* If page not found, mark as broken */ -}}
+    <a href="{{ $dest | safeURL }}" class="broken-link" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a>
   {{- end -}}
 {{- else -}}
   {{- /* Standard link */ -}}
