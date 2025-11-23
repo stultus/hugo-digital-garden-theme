@@ -12,13 +12,19 @@
         {{ if eq .Params.type "source" }}
         <span class="badge badge-source">📚 Source</span>
         {{ end }}
-        <span class="badge badge-{{ .Params.status | default "seeding" }}">
-            {{ if eq .Params.status "evergreen" }}🌳 Evergreen
-            {{ else if eq .Params.status "growing" }}🌿 Growing
-            {{ else }}🌱 Seedling{{ end }}
-        </span>
-        <span class="date">Created: {{ .Date.Format "Jan 2, 2006" }}</span>
-        <span class="date">Updated: {{ .Lastmod.Format "Jan 2, 2006" }}</span>
+        <div class="meta-item">
+            <span class="badge badge-{{ .Params.status | default "seeding" }}">
+                {{ if eq .Params.status "evergreen" }}🌳 Evergreen
+                {{ else if eq .Params.status "growing" }}🌿 Growing
+                {{ else }}🌱 Seedling{{ end }}
+            </span>
+        </div>
+        <div class="meta-item">
+            <span class="date">Created: {{ .Date.Format "Jan 2, 2006" }}</span>
+        </div>
+        <div class="meta-item">
+            <span class="date">Updated: {{ .Lastmod.Format "Jan 2, 2006" }}</span>
+        </div>
     </div>
     
     <!-- Tags -->
@@ -29,6 +35,9 @@
         {{ end }}
     </div>
     {{ end }}
+    
+    <!-- Separator -->
+    <hr class="content-separator">
     
     <!-- Content -->
     <div class="content">

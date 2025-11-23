@@ -9,7 +9,7 @@
     class="anchor" 
     data-title="Copy link to clipboard" 
     aria-label="Copy link to clipboard"
-    onclick="navigator.clipboard.writeText({{ print .Page.Permalink "#" .Anchor | safeURL }});
+    onclick="navigator.clipboard.writeText('{{ print .Page.Permalink "#" .Anchor | safeURL }}');
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.textContent = '✓ Link copied';

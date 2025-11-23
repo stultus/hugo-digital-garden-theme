@@ -71,7 +71,6 @@ body {
 /* Navigation */
 nav {
     background: var(--bg-primary);
-    border-bottom: 1px solid var(--border);
     padding: 1rem 0;
     margin-bottom: 2rem;
 }
@@ -286,6 +285,64 @@ th {
     font-size: 0.85rem;
     color: var(--text-muted);
     margin-bottom: 1.5rem;
+}
+
+/* Note Metadata */
+.note-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.note-meta .meta-item {
+    display: flex;
+    align-items: center;
+}
+
+.note-meta .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+}
+
+.note-meta .badge-source {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+}
+
+.note-meta .date {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Tags Container */
+.tags {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Content Separator */
+.content-separator {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem auto;
+    max-width: 65ch;
+}
+
+/* Footer Separator */
+.footer-separator {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem auto 2rem auto;
+    max-width: 65ch;
 }
 
 /* Back Link */
