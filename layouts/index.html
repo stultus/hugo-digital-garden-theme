@@ -4,7 +4,7 @@
     <!-- Map of Content / Intro -->
     {{ with .Content }}
     <div class="mb-5 serif main-content">
-        {{ . }}
+        {{ . | safeHTML }}
     </div>
     {{ end }}
 
