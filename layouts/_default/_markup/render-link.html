@@ -2,25 +2,38 @@
 {{- $text := .Text -}}
 {{- $title := .Title -}}
 
-{{- /* Check if it's an external link, anchor, or absolute path */ -}}
-{{- if or (hasPrefix $dest "http") (hasPrefix $dest "https") (hasPrefix $dest "mailto:") (hasPrefix $dest "#") (hasPrefix $dest "/notes/") -}}
+{{- /* Check if it's an external link or anchor */ -}}
+{{- if or (hasPrefix $dest "http") (hasPrefix $dest "https") (hasPrefix $dest "mailto:") (hasPrefix $dest "#") -}}
   {{- /* External link - no brackets */ -}}
   <a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}{{ if hasPrefix $dest "http" }} target="_blank" rel="noopener"{{ end }}>{{ $text }}</a>
 {{- else -}}
   {{- /* Internal link - WITH brackets */ -}}
   {{- $page := false -}}
   
-  {{- /* Title Match - use the link text to find the page */ -}}
-  {{- range site.RegularPages -}}
-      {{- if eq .Title $text -}}
-          {{- $page = . -}}
-          {{- break -}}
+  {{- /* If it's an absolute path starting with /notes/, try to find the page */ -}}
+  {{- if hasPrefix $dest "/notes/" -}}
+    {{- $cleanPath := strings.TrimPrefix "/notes/" $dest -}}
+    {{- $cleanPath = strings.TrimSuffix "/" $cleanPath -}}
+    {{- range site.RegularPages -}}
+      {{- if or (eq .RelPermalink $dest) (eq (printf "/notes/%s/" .File.ContentBaseName) $dest) -}}
+        {{- $page = . -}}
+        {{- break -}}
       {{- end -}}
+    {{- end -}}
+  {{- else -}}
+    {{- /* Title Match - use the link text to find the page */ -}}
+    {{- range site.RegularPages -}}
+        {{- if eq .Title $text -}}
+            {{- $page = . -}}
+            {{- break -}}
+        {{- end -}}
+    {{- end -}}
   {{- end -}}
   
   {{- if $page -}}
     <span class="wikilink-bracket">[[</span><a href="{{ $page.RelPermalink }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a><span class="wikilink-bracket">]]</span>
   {{- else -}}
-    <span class="wikilink-bracket">[[</span><span class="broken-link" style="color: #ef4444; text-decoration: line-through;">{{ $text }}</span><span class="wikilink-bracket">]]</span>
+    {{- /* Fallback - render as-is if page not found */ -}}
+    <span class="wikilink-bracket">[[</span><a href="{{ $dest | safeURL }}" {{ with $title }}title="{{ . }}"{{ end }}>{{ $text }}</a><span class="wikilink-bracket">]]</span>
   {{- end -}}
 {{- end -}}

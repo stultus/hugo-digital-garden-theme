@@ -2,52 +2,46 @@
 <div class="container">
     
     <!-- Back Link -->
-    <a href="{{ "/" | relURL }}" class="back-link">← Notes</a>
+    <a href="{{ "/notes/" | relURL }}" class="back-link">← Notes</a>
     
     <!-- Title -->
     <h1>{{ .Title }}</h1>
     
     <!-- Metadata -->
-    <div class="metadata">
-        {{ with .Date }}Created {{ .Format "2006-01-02" }}{{ end }}
-        {{ with .Lastmod }}· Updated {{ .Format "2006-01-02" }}{{ end }}
-        {{ with .Params.status }}
-        · <span class="status status-{{ . }}">
-            {{ if eq . "evergreen" }}🌳{{ else if eq . "growing" }}🌿{{ else }}🌱{{ end }}
-            {{ . }}
+    <div class="note-meta">
+        {{ if eq .Params.type "source" }}
+        <span class="badge badge-source">📚 Source</span>
+        {{ end }}
+        <span class="badge badge-{{ .Params.status | default "seeding" }}">
+            {{ if eq .Params.status "evergreen" }}🌳 Evergreen
+            {{ else if eq .Params.status "growing" }}🌿 Growing
+            {{ else }}🌱 Seedling{{ end }}
         </span>
-        {{ end }}
-        {{ with .Params.tags }}
-        <div style="margin-top: 0.5rem;">
-            {{ range . }}
-            <a href="{{ printf "tags/%s" (urlize .) | relURL }}" class="tag">{{ . }}</a>
-            {{ end }}
-        </div>
+        <span class="date">Created: {{ .Date.Format "Jan 2, 2006" }}</span>
+        <span class="date">Updated: {{ .Lastmod.Format "Jan 2, 2006" }}</span>
+    </div>
+    
+    <!-- Tags -->
+    {{ with .Params.tags }}
+    <div class="tags">
+        {{ range . }}
+        <a href="{{ printf "/notes/tags/%s/" (urlize .) | relURL }}" class="tag">{{ . }}</a>
         {{ end }}
     </div>
-
-    <!-- Main Content -->
+    {{ end }}
+    
+    <!-- Content -->
     <div class="content">
-        {{ .Content | safeHTML }}
+        {{ .Content }}
     </div>
-
-    <!-- Backlinks Section -->
+    
+    <!-- Backlinks -->
     {{ $currentPage := . }}
-    {{ $currentPermalink := .Permalink }}
-    {{ $currentRelPermalink := .RelPermalink }}
-    {{ $currentFilePath := .File.Path }}
     {{ $backlinks := slice }}
     
     {{ range .Site.RegularPages }}
         {{ $content := .RawContent }}
-        {{ if and (ne .Permalink $currentPermalink)
-            (or
-                (in $content (printf "ref \"%s\"" $currentFilePath))
-                (in $content $currentPermalink)
-                (in $content $currentRelPermalink)
-                (in $content (printf "[%s]" $currentPage.Title))
-            )
-        }}
+        {{ if and (ne .Permalink $currentPage.Permalink) (in $content $currentPage.Title) }}
             {{ $backlinks = $backlinks | append . }}
         {{ end }}
     {{ end }}
@@ -59,14 +53,12 @@
                 {{ range $backlinks }}
                     <li>
                         <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                        {{ if .Summary }}
-                        <div class="backlinks-summary">{{ .Summary | truncate 120 }}</div>
-                        {{ end }}
+                        {{ if .Summary }}<p class="summary">{{ .Summary | truncate 100 }}</p>{{ end }}
                     </li>
                 {{ end }}
             </ul>
         </div>
     {{ end }}
+    
 </div>
-
 {{ end }}
