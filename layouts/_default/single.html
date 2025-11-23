@@ -12,6 +12,11 @@
     <!-- Existing content -->
     <div class="py-4 rounded-3">
         <div class="container-fluid py-2">
+            {{ if eq .Params.type "source" }}
+            <div class="text-center mb-2">
+                <span class="badge bg-warning text-dark">📚 Source Note</span>
+            </div>
+            {{ end }}
             <h1 class="display-2 mb-4 text-center">{{ .Title }}</h1>
         </div>
         {{ with .Summary }}

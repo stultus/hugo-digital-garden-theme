@@ -10,8 +10,7 @@
     {{- $links = $links | append $linkTarget -}}
   {{- end -}}
   
-  {{- $pageData := dict "id" .RelPermalink "title" .Title "status" (.Params.status | default "seeding") "links" $links -}}
+  {{- $pageData := dict "id" .RelPermalink "title" .Title "status" (.Params.status | default "seeding") "type" .Params.type "links" $links -}}
   {{- $pages = $pages | append $pageData -}}
 {{- end -}}
 {{- $pages | jsonify -}}
-

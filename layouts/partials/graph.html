@@ -9,6 +9,7 @@
         id: page.title, 
         url: page.id,
         status: page.status,
+        type: page.type,
         val: 1 
       }));
       
@@ -29,6 +30,7 @@
         .graphData({ nodes, links })
         .nodeLabel('id')
         .nodeColor(node => {
+            if (node.type === 'source') return '#ff4d4d'; // Red for Sources
             if (node.status === 'evergreen') return 'var(--status-evergreen)'; // Green
             if (node.status === 'growing') return 'var(--status-budding)';   // Blue
             return 'var(--status-seeding)'; // Gold
@@ -41,4 +43,3 @@
         Graph.zoomToFit(400);
     });
 </script>
-
