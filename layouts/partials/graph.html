@@ -47,31 +47,54 @@
         (container)
         .graphData({ nodes, links })
         .width(containerWidth)
-        .height(400)
+        .height(500)
         .nodeLabel('id')
-        .nodeRelSize(4)
+        .nodeRelSize(6)
         .nodeColor(node => {
           if (node.status === 'evergreen') return '#10b981';
           if (node.status === 'growing') return '#3b82f6';
           return '#f59e0b';
         })
+        .nodeCanvasObject((node, ctx, globalScale) => {
+          // Draw node circle
+          const size = 6;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+          ctx.fillStyle = node.color || (node.status === 'evergreen' ? '#10b981' : node.status === 'growing' ? '#3b82f6' : '#f59e0b');
+          ctx.fill();
+          
+          // Draw label
+          const label = node.id;
+          const fontSize = 12/globalScale;
+          ctx.font = `${fontSize}px IBM Plex Mono, monospace`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim();
+          ctx.fillText(label, node.x, node.y + size + fontSize);
+        })
+        .nodePointerAreaPaint((node, color, ctx) => {
+          ctx.fillStyle = color;
+          const size = 6;
+          ctx.fillRect(node.x - size, node.y - size, size * 2, size * 2);
+        })
         .linkColor(() => getComputedStyle(document.documentElement).getPropertyValue('--border').trim())
-        .linkWidth(1)
+        .linkWidth(1.5)
         .onNodeClick(node => window.location.href = node.url)
         .onNodeHover(node => {
           container.style.cursor = node ? 'pointer' : 'default';
+        })
+        .cooldownTicks(100)
+        .onEngineStop(() => {
+          // Zoom to fit all nodes after layout stabilizes
+          if (Graph.zoomToFit) {
+            Graph.zoomToFit(400, 50);
+          }
         });
         
       // Apply d3 forces separately
-      Graph.d3Force('charge').strength(-200);
-      Graph.d3Force('center').strength(0.5);
-        
-      // Zoom to fit after a short delay
-      setTimeout(() => {
-        if (Graph.zoomToFit) {
-          Graph.zoomToFit(400, 20);
-        }
-      }, 100);
+      Graph.d3Force('charge').strength(-300);
+      Graph.d3Force('link').distance(80);
+      Graph.d3Force('center').strength(0.3);
     })
     .catch(error => {
       console.error('Graph error:', error);
