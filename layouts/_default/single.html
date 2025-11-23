@@ -49,7 +49,7 @@
                 <div class="col-sm-8" style="text-align: right;">
                     {{ with .Params.tags }}
                     {{ range . }}
-                    <a href="/tags/{{ urlize . }}" class="badge tag-badge">{{ . }}</a>
+                    <a href="{{ printf "tags/%s" (urlize .) | relURL }}" class="badge tag-badge">{{ . }}</a>
                     {{ end }}
                     {{ end }}
                 </div>
