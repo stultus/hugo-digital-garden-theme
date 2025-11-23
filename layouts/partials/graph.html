@@ -69,7 +69,11 @@
           ctx.font = `${fontSize}px IBM Plex Mono, monospace`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim();
+          
+          // Get text color from CSS variable, fallback to dark/light based on theme
+          const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || 
+                           (document.body.classList.contains('dark-theme') ? '#d8dee9' : '#2e3440');
+          ctx.fillStyle = textColor;
           ctx.fillText(label, node.x, node.y + size + fontSize);
         })
         .nodePointerAreaPaint((node, color, ctx) => {
