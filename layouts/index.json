@@ -2,32 +2,26 @@
 {{- range .Site.RegularPages -}}
   {{- $links := slice -}}
   {{- $content := .RawContent -}}
-  {{- /* Simple regex to find wikilinks [[Link]] */ -}}
-  {{- $matches := findRE `\[\[([^\]]+)\]\]` $content -}}
-  {{- range $matches -}}
-    {{- $linkTarget := replace . "[[" "" -}}
-    {{- $linkTarget = replace $linkTarget "]]" "" -}}
+  
+  {{- /* Find markdown links [text](url) */ -}}
+  {{- $markdownLinks := findRE `\[([^\]]+)\]\(([^\)]+)\)` $content -}}
+  {{- range $markdownLinks -}}
+    {{- /* Extract the link text which should be the page title */ -}}
+    {{- $linkText := replaceRE `\[([^\]]+)\]\(([^\)]+)\)` "$1" . -}}
     
-    {{- /* Resolve the link target to a page Title to match the node ID */ -}}
-    {{- $resolvedTitle := $linkTarget -}}
-    {{- $targetPage := site.GetPage $linkTarget -}}
-    {{- if not $targetPage -}}
-        {{- $targetPage = site.GetPage (printf "sources/%s" $linkTarget) -}}
-    {{- end -}}
-    {{- if not $targetPage -}}
-        {{- range site.RegularPages -}}
-            {{- if eq .Title $linkTarget -}}
-                {{- $targetPage = . -}}
-                {{- break -}}
-            {{- end -}}
+    {{- /* Try to find the target page by title */ -}}
+    {{- $targetPage := false -}}
+    {{- range site.RegularPages -}}
+        {{- if eq .Title $linkText -}}
+            {{- $targetPage = . -}}
+            {{- break -}}
         {{- end -}}
     {{- end -}}
     
+    {{- /* If found, add to links */ -}}
     {{- if $targetPage -}}
-        {{- $resolvedTitle = $targetPage.Title -}}
+        {{- $links = $links | append $targetPage.Title -}}
     {{- end -}}
-
-    {{- $links = $links | append $resolvedTitle -}}
   {{- end -}}
   
   {{- $pageData := dict "id" .Title "url" .RelPermalink "status" (.Params.status | default "seeding") "type" .Params.type "links" $links -}}

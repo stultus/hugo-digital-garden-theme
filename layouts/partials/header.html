@@ -1,30 +1,18 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-        <a class="navbar-brand" href="{{ .Site.BaseURL }}">
+<nav style="padding: 1rem 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem;">
+    <div class="container" style="max-width: 65ch; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
+        <a href="{{ .Site.BaseURL }}" style="font-weight: 600; font-size: 1.1rem; border-bottom: none; color: var(--text-primary);">
             {{ if .Site.Params.Initials }}
-            <b style="font-weight: 800;">{{ .Site.Params.Initials }}</b>
+            {{ .Site.Params.Initials }}
             {{ else }}
-            <b style="font-weight: 800;">{{ .Site.Params.Name }}</b>
+            {{ .Site.Params.Name }}
             {{ end }}
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                {{- $currentPage := . -}}
-                {{ range .Site.Menus.main -}}
-                    <li class='nav-item {{ if $currentPage.IsMenuCurrent "main" . }}active{{ end }}'>
-                        <a class="nav-link" href="{{ .URL }}"> {{ .Name }}</a>
-                    </li>
-                {{ end }}
-                <li class="nav-item px-2 pt-1">
-                    <button type="button" class="btn" id="dark-mode-toggle" aria-label="Toggle Dark Mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
+        <ul style="display: flex; gap: 1.5rem; list-style: none; margin: 0; align-items: center;">
+            {{ range .Site.Menus.main }}
+                <li>
+                    <a href="{{ .URL }}" style="border-bottom: none; color: var(--text-secondary); font-size: 0.95rem;">{{ .Name }}</a>
                 </li>
-            </ul>
-        </div>
+            {{ end }}
+        </ul>
     </div>
 </nav>
