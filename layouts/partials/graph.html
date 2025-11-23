@@ -1,4 +1,9 @@
-<div id="graph-container"></div>
+<div style="position: relative;">
+  <div id="graph-container" style="background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; min-height: 600px;"></div>
+  <div style="position: absolute; bottom: 1rem; right: 1rem; font-size: 0.75rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid var(--border); font-family: var(--font-code);">
+    💡 Scroll to zoom • Drag to pan • Click nodes to navigate
+  </div>
+</div>
 
 <script src="https://unpkg.com/d3@7"></script>
 <script src="https://unpkg.com/force-graph"></script>
@@ -48,59 +53,67 @@
         (container)
         .graphData({ nodes, links })
         .width(containerWidth)
-        .height(500)
+        .height(600)
         .nodeLabel('id')
-        .nodeRelSize(6)
+        .nodeRelSize(10)
         .nodeColor(node => {
           if (node.status === 'evergreen') return '#10b981';
           if (node.status === 'growing') return '#3b82f6';
           return '#f59e0b';
         })
         .nodeCanvasObject((node, ctx, globalScale) => {
-          // Draw node circle
-          const size = 6;
+          // Draw node circle - much larger and always visible
+          const size = 12;
           ctx.beginPath();
           ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
           ctx.fillStyle = node.color || (node.status === 'evergreen' ? '#10b981' : node.status === 'growing' ? '#3b82f6' : '#f59e0b');
           ctx.fill();
           
-          // Draw label
+          // Add a subtle border to make nodes stand out
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          
+          // Draw label - larger font and better positioning
           const label = node.id;
-          const fontSize = 12/globalScale;
+          const fontSize = 13;
           ctx.font = `${fontSize}px IBM Plex Mono, monospace`;
           ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
+          ctx.textBaseline = 'top';
           
-          // Get text color from CSS variable, fallback to dark/light based on theme
-          const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || 
-                           (document.body.classList.contains('dark-theme') ? '#d8dee9' : '#2e3440');
+          // Get text color - ensure it's visible in both modes
+          const isDark = document.body.classList.contains('dark-theme');
+          const textColor = isDark ? '#d8dee9' : '#2e3440';
           ctx.fillStyle = textColor;
-          ctx.fillText(label, node.x, node.y + size + fontSize);
+          
+          // Position label below node with more spacing
+          ctx.fillText(label, node.x, node.y + size + 10);
         })
         .nodePointerAreaPaint((node, color, ctx) => {
           ctx.fillStyle = color;
-          const size = 6;
+          const size = 15;
           ctx.fillRect(node.x - size, node.y - size, size * 2, size * 2);
         })
-        .linkColor(() => getComputedStyle(document.documentElement).getPropertyValue('--border').trim())
+        .linkColor(() => {
+          const isDark = document.body.classList.contains('dark-theme');
+          return isDark ? '#4a4a4a' : '#d0d0d0';
+        })
         .linkWidth(1.5)
         .onNodeClick(node => window.location.href = node.url)
         .onNodeHover(node => {
           container.style.cursor = node ? 'pointer' : 'default';
         })
         .cooldownTicks(100)
-        .onEngineStop(() => {
-          // Zoom to fit all nodes after layout stabilizes
-          if (Graph.zoomToFit) {
-            Graph.zoomToFit(400, 50);
-          }
-        });
+        .zoom(2.5)  // Start with a good zoom level
+        .enableNodeDrag(true)  // Allow dragging nodes like Obsidian
+        .enableZoomInteraction(true)  // Enable zoom with mouse wheel
+        .enablePanInteraction(true);  // Enable panning
         
-      // Apply d3 forces separately with stronger repulsion for spacing
-      Graph.d3Force('charge').strength(-800);
-      Graph.d3Force('link').distance(150);
-      Graph.d3Force('center').strength(0.2);
-      Graph.d3Force('collide', d3.forceCollide(30));
+      // Apply d3 forces with very strong repulsion for better spacing
+      Graph.d3Force('charge').strength(-2000);
+      Graph.d3Force('link').distance(120);
+      Graph.d3Force('center').strength(0.05);
+      Graph.d3Force('collide', d3.forceCollide(80));
     })
     .catch(error => {
       console.error('Graph error:', error);
