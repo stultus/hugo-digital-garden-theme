@@ -6,21 +6,49 @@
   {{- /* Find markdown links [text](url) */ -}}
   {{- $markdownLinks := findRE `\[([^\]]+)\]\(([^\)]+)\)` $content -}}
   {{- range $markdownLinks -}}
-    {{- /* Extract the link text which should be the page title */ -}}
+    {{- /* Extract link text and destination */ -}}
     {{- $linkText := replaceRE `\[([^\]]+)\]\(([^\)]+)\)` "$1" . -}}
+    {{- $linkDest := replaceRE `\[([^\]]+)\]\(([^\)]+)\)` "$2" . -}}
     
-    {{- /* Try to find the target page by title */ -}}
     {{- $targetPage := false -}}
-    {{- range site.RegularPages -}}
-        {{- if eq .Title $linkText -}}
+    
+    {{- /* Check if it's an external link - skip it */ -}}
+    {{- if not (or (hasPrefix $linkDest "http") (hasPrefix $linkDest "https") (hasPrefix $linkDest "mailto:") (hasPrefix $linkDest "#")) -}}
+      {{- /* Try to find by absolute path starting with /notes/ */ -}}
+      {{- if hasPrefix $linkDest "/notes/" -}}
+        {{- range site.RegularPages -}}
+          {{- if or (eq .RelPermalink $linkDest) (eq (printf "/notes/%s/" .File.ContentBaseName) $linkDest) -}}
             {{- $targetPage = . -}}
             {{- break -}}
+          {{- end -}}
         {{- end -}}
-    {{- end -}}
-    
-    {{- /* If found, add to links */ -}}
-    {{- if $targetPage -}}
+      {{- else -}}
+        {{- /* Try to find by slug/path (relative path) */ -}}
+        {{- $cleanSlug := strings.TrimSuffix "/" $linkDest -}}
+        {{- $cleanSlug = strings.TrimPrefix "./" $cleanSlug -}}
+        {{- range site.RegularPages -}}
+          {{- $pageSlug := .File.ContentBaseName -}}
+          {{- if or (eq $pageSlug $cleanSlug) (eq (printf "%s/" $pageSlug) $cleanSlug) -}}
+            {{- $targetPage = . -}}
+            {{- break -}}
+          {{- end -}}
+        {{- end -}}
+        
+        {{- /* Fallback: Try to find by title if slug didn't match */ -}}
+        {{- if not $targetPage -}}
+          {{- range site.RegularPages -}}
+            {{- if eq .Title $linkText -}}
+              {{- $targetPage = . -}}
+              {{- break -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      
+      {{- /* If found, add to links using the page title as the identifier */ -}}
+      {{- if $targetPage -}}
         {{- $links = $links | append $targetPage.Title -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
   

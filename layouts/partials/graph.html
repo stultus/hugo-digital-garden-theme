@@ -1,7 +1,7 @@
 <div style="position: relative;">
   <div id="graph-container" style="background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; min-height: 600px;"></div>
-  <div style="position: absolute; bottom: 1rem; right: 1rem; font-size: 0.75rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid var(--border); font-family: var(--font-code);">
-    💡 Scroll to zoom • Drag to pan • Click nodes to navigate
+  <div style="position: absolute; bottom: 1rem; right: 1rem; font-size: 0.75rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid var(--border); font-family: var(--font-code); z-index: 10;">
+    💡 Scroll to zoom • Drag to pan • Click to navigate • Right-click for new tab
   </div>
 </div>
 
@@ -11,33 +11,36 @@
   fetch('{{ "index.json" | relURL }}')
     .then(res => res.ok ? res.json() : Promise.reject('Failed to load'))
     .then(data => {
-      // Filter out pages with no links and sources
-      const connectedPages = data.filter(page => 
-        page.links && page.links.length > 0 && page.type !== 'source'
-      );
+      // Filter out source pages
+      const allPages = data.filter(page => page.type !== 'source');
       
-      if (connectedPages.length === 0) {
+      if (allPages.length === 0) {
         document.getElementById('graph-container').innerHTML = 
-          '<p style="text-align: center; padding: 3rem; color: var(--text-muted);">No connections yet. Start linking notes.</p>';
+          '<p style="text-align: center; padding: 3rem; color: var(--text-muted);">No pages found.</p>';
         return;
       }
       
-      const nodes = connectedPages.map(page => ({ 
-        id: page.id,
-        url: page.url,
-        status: page.status || 'seeding',
-        val: (page.links || []).length + 1
-      }));
+      // Build a map of all pages by title (id)
+      const pageMap = new Map();
+      allPages.forEach(page => {
+        pageMap.set(page.id, page);
+      });
       
+      // Collect all unique node IDs (both sources and targets)
+      const nodeIds = new Set();
       const links = [];
-      const nodeIds = new Set(nodes.map(n => n.id));
       
-      connectedPages.forEach(source => {
-        (source.links || []).forEach(target => {
-          if (nodeIds.has(target) && source.id !== target) {
-            links.push({ source: source.id, target: target });
-          }
-        });
+      allPages.forEach(source => {
+        if (source.links && source.links.length > 0) {
+          source.links.forEach(targetId => {
+            // Only add links if target exists and is not a source
+            if (pageMap.has(targetId) && source.id !== targetId) {
+              nodeIds.add(source.id);
+              nodeIds.add(targetId);
+              links.push({ source: source.id, target: targetId });
+            }
+          });
+        }
       });
       
       if (links.length === 0) {
@@ -45,6 +48,24 @@
           '<p style="text-align: center; padding: 3rem; color: var(--text-muted);">No connections yet. Start linking notes.</p>';
         return;
       }
+      
+      // Create nodes for all connected pages
+      const nodes = Array.from(nodeIds).map(id => {
+        const page = pageMap.get(id);
+        if (!page) return null;
+        
+        // Count both incoming and outgoing links
+        const outgoingLinks = (page.links || []).filter(linkId => pageMap.has(linkId) && linkId !== id).length;
+        const incomingLinks = links.filter(link => link.target === id).length;
+        const totalConnections = outgoingLinks + incomingLinks;
+        
+        return {
+          id: page.id,
+          url: page.url,
+          status: page.status || 'seeding',
+          val: Math.max(totalConnections, 1) // Ensure minimum size
+        };
+      }).filter(n => n !== null);
 
       const container = document.getElementById('graph-container');
       const containerWidth = container.offsetWidth;
@@ -62,32 +83,38 @@
           return '#f59e0b';
         })
         .nodeCanvasObject((node, ctx, globalScale) => {
-          // Draw node circle - much larger and always visible
-          const size = 12;
+          // Scale node size based on zoom level for better visibility
+          const minSize = 8;
+          const maxSize = 16;
+          const size = Math.max(minSize, Math.min(maxSize, 10 + (node.val || 1) * 0.5));
+          
+          // Draw node circle
           ctx.beginPath();
           ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
           ctx.fillStyle = node.color || (node.status === 'evergreen' ? '#10b981' : node.status === 'growing' ? '#3b82f6' : '#f59e0b');
           ctx.fill();
           
-          // Add a subtle border to make nodes stand out
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-          ctx.lineWidth = 2;
+          // Add a border to make nodes stand out
+          const isDark = document.body.classList.contains('dark-theme');
+          ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.2)';
+          ctx.lineWidth = 1.5;
           ctx.stroke();
           
-          // Draw label - larger font and better positioning
-          const label = node.id;
-          const fontSize = 13;
-          ctx.font = `${fontSize}px IBM Plex Mono, monospace`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'top';
-          
-          // Get text color - ensure it's visible in both modes
-          const isDark = document.body.classList.contains('dark-theme');
-          const textColor = isDark ? '#d8dee9' : '#2e3440';
-          ctx.fillStyle = textColor;
-          
-          // Position label below node with more spacing
-          ctx.fillText(label, node.x, node.y + size + 10);
+          // Draw label only if zoomed in enough
+          if (globalScale > 0.5) {
+            const label = node.id;
+            const fontSize = Math.max(10, Math.min(14, 12 / globalScale));
+            ctx.font = `${fontSize}px IBM Plex Mono, monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            
+            // Get text color - ensure it's visible in both modes
+            const textColor = isDark ? '#d8dee9' : '#2e3440';
+            ctx.fillStyle = textColor;
+            
+            // Position label below node
+            ctx.fillText(label, node.x, node.y + size + 8);
+          }
         })
         .nodePointerAreaPaint((node, color, ctx) => {
           ctx.fillStyle = color;
@@ -99,21 +126,35 @@
           return isDark ? '#4a4a4a' : '#d0d0d0';
         })
         .linkWidth(1.5)
-        .onNodeClick(node => window.location.href = node.url)
+        .onNodeClick(node => {
+          if (node && node.url) {
+            window.location.href = node.url;
+          }
+        })
         .onNodeHover(node => {
           container.style.cursor = node ? 'pointer' : 'default';
         })
-        .cooldownTicks(100)
-        .zoom(2.5)  // Start with a good zoom level
+        .onNodeRightClick(node => {
+          if (node && node.url) {
+            window.open(node.url, '_blank');
+          }
+        })
+        .cooldownTicks(200)
+        .zoom(1.0)  // Start zoomed out to see all nodes
         .enableNodeDrag(true)  // Allow dragging nodes like Obsidian
         .enableZoomInteraction(true)  // Enable zoom with mouse wheel
         .enablePanInteraction(true);  // Enable panning
         
-      // Apply d3 forces with very strong repulsion for better spacing
-      Graph.d3Force('charge').strength(-2000);
-      Graph.d3Force('link').distance(120);
-      Graph.d3Force('center').strength(0.05);
-      Graph.d3Force('collide', d3.forceCollide(80));
+      // Apply d3 forces with better spacing
+      Graph.d3Force('charge').strength(-1500);
+      Graph.d3Force('link').distance(150);
+      Graph.d3Force('center').strength(0.1);
+      Graph.d3Force('collide', d3.forceCollide(100));
+      
+      // Auto-fit after initial layout
+      setTimeout(() => {
+        Graph.zoomToFit(400, 50);
+      }, 1000);
     })
     .catch(error => {
       console.error('Graph error:', error);
